@@ -1,20 +1,40 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 @import "tailwindcss";
 
+:root {
+  /* --- LIGHT MODE PALETTE --- */
+  --bg-color: #F8FAFC; 
+  --surface-color: #FFFFFF; 
+  --surface-hover-color: #F1F5F9;
+  --border-color: #E2E8F0;
+  --text-primary-color: #0F172A; 
+  --text-secondary-color: #64748B;
+  --accent-color: #4F46E5; 
+  --accent-hover-color: #4338CA;
+}
+
+.dark {
+  /* --- DARK MODE PALETTE --- */
+  --bg-color: #020617;        /* Deep slate background */
+  --surface-color: #0F172A;   /* Slightly lighter slate for cards */
+  --surface-hover-color: #1E293B;
+  --border-color: #1E293B;    /* Dark borders */
+  --text-primary-color: #F8FAFC; /* White text */
+  --text-secondary-color: #94A3B8; /* Dimmed text */
+  --accent-color: #6366F1;    /* Slightly brighter indigo to pop on dark */
+  --accent-hover-color: #4F46E5;
+}
+
 @theme {
-  /* The Smooth Light Theme Palette */
-  --color-forge-bg: #F8FAFC; 
-  --color-forge-surface: #FFFFFF; 
-  --color-forge-surfaceHover: #F1F5F9;
-  --color-forge-border: #E2E8F0;
-  
-  /* Rich, high-contrast text */
-  --color-forge-textPrimary: #0F172A; 
-  --color-forge-textSecondary: #64748B;
-  
-  /* Smooth Indigo Accent */
-  --color-forge-accent: #4F46E5; 
-  --color-forge-accentHover: #4338CA;
+  /* Map Tailwind classes to your dynamic variables */
+  --color-forge-bg: var(--bg-color); 
+  --color-forge-surface: var(--surface-color); 
+  --color-forge-surfaceHover: var(--surface-hover-color);
+  --color-forge-border: var(--border-color);
+  --color-forge-textPrimary: var(--text-primary-color); 
+  --color-forge-textSecondary: var(--text-secondary-color);
+  --color-forge-accent: var(--accent-color); 
+  --color-forge-accentHover: var(--accent-hover-color);
   
   --font-inter: 'Inter', sans-serif;
 }
@@ -24,4 +44,11 @@ body {
   color: var(--color-forge-textPrimary);
   font-family: var(--font-inter);
   -webkit-font-smoothing: antialiased;
+  /* THE MAGIC: This creates the smooth fade when toggling modes */
+  transition: background-color 0.4s ease, color 0.4s ease;
+}
+
+/* Ensure all cards fade smoothly too */
+* {
+  transition: border-color 0.4s ease, background-color 0.4s ease;
 }

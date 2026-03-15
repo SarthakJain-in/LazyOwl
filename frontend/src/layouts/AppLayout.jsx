@@ -1,5 +1,6 @@
 import { Outlet, Link, useLocation } from "react-router-dom";
 import { LayoutDashboard, Map, Focus, BookOpen } from "lucide-react";
+import ThemeToggle from "../components/ThemeToggle";
 
 export default function AppLayout() {
   const location = useLocation();
@@ -48,10 +49,11 @@ export default function AppLayout() {
     <div className="flex h-screen overflow-hidden bg-forge-bg">
       {/* Desktop Sidebar */}
       <aside className="hidden md:flex flex-col w-64 bg-forge-surface border-r border-forge-border p-4">
-        <div className="mb-10 mt-4 px-3">
+        <div className="mb-10 mt-4 px-3 flex items-center justify-between">
           <h1 className="text-2xl font-bold text-forge-textPrimary tracking-tight">
             LazyOwl.
           </h1>
+          <ThemeToggle />
         </div>
         <nav className="flex-1">
           <NavLinks isMobile={false} />

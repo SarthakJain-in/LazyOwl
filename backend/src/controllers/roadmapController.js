@@ -134,3 +134,29 @@ export const toggleRoadmapActive = async (req, res) => {
       .json({ message: "Error toggling roadmap status", error: error.message });
   }
 };
+
+export const deleteRoadmap = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // 1. Find the roadmap first to make sure it exists
+    const roadmap = await Roadmap.findById(id);
+    if (!roadmap) {
+      return res.status(404).json({ message: "Roadmap not found" });
+    }
+
+    // 2. THE CASCADE: Delete all tasks belonging to this roadmap
+    await Task.deleteMany({ roadmapId: id });
+
+    // 3. Delete the roadmap itself
+    await roadmap.deleteOne();
+
+    res
+      .status(200)
+      .json({ message: "Roadmap and all associated tasks deleted." });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Error deleting roadmap", error: error.message });
+  }
+};

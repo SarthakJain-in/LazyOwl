@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useAppStore } from "../store/useAppStore";
 import {
   ArrowLeft,
@@ -18,6 +19,7 @@ import TaskDetailModal from "../components/TaskDetailModal";
 
 export default function RoadmapDetail() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const {
     roadmaps,
     tasks,
@@ -27,6 +29,7 @@ export default function RoadmapDetail() {
     addTask,
     updateTask,
     deleteTask,
+    deleteRoadmap,
   } = useAppStore();
 
   const [selectedTask, setSelectedTask] = useState(null);
@@ -58,6 +61,18 @@ export default function RoadmapDetail() {
     roadmapTasks.length > 0
       ? Math.round((completedCount / roadmapTasks.length) * 100)
       : 0;
+
+  // Delete Roadmap
+  const handleDelete = async () => {
+    if (
+      window.confirm(
+        "Are you sure? This will delete the roadmap and all its tasks forever.",
+      )
+    ) {
+      await deleteRoadmap(id);
+      navigate("/roadmaps"); // Redirect back to the list
+    }
+  };
 
   // --- THE NEW LOGIC: GROUP TASKS BY MODULE ---
   const groupedTasks = roadmapTasks.reduce((acc, task) => {
@@ -150,6 +165,13 @@ export default function RoadmapDetail() {
               <h2 className="text-3xl font-bold text-forge-textPrimary">
                 {roadmap.title}
               </h2>
+              <button
+                onClick={handleDelete}
+                className="p-2 text-forge-textSecondary hover:text-red-500 hover:bg-red-50 rounded-lg transition-all shrink-0 ml-2"
+                title="Delete Roadmap"
+              >
+                <Trash2 size={20} />
+              </button>
             </div>
             <span className="text-xs font-bold text-forge-accent bg-indigo-50 px-3 py-1 rounded-full uppercase tracking-wider inline-block">
               {roadmap.category || "General"}

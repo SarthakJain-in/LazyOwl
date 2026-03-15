@@ -47,4 +47,12 @@ export const roadmapService = {
     if (!response.ok) throw new Error("Failed to toggle roadmap");
     return response.json();
   },
+
+  deleteRoadmap: async (id) => {
+    const response = await fetch(`${API_URL}/${id}`, {
+      method: "DELETE",
+    });
+    if (!response.ok) throw new Error("Failed to delete roadmap");
+    return response.json();
+  },
 };

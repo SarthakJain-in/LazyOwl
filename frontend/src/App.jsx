@@ -1,4 +1,6 @@
+import { useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { useAppStore } from "./store/useAppStore";
 import AppLayout from "./layouts/AppLayout";
 import Dashboard from "./pages/Dashboard";
 import Roadmaps from "./pages/Roadmaps";
@@ -12,6 +14,11 @@ const Placeholder = ({ title }) => (
 );
 
 function App() {
+  const { initTheme } = useAppStore();
+
+  useEffect(() => {
+    initTheme();
+  }, [initTheme]);
   return (
     <BrowserRouter>
       <Routes>

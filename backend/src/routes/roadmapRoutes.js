@@ -4,6 +4,7 @@ import {
   createRoadmap,
   generateRoadmapWithAI,
   toggleRoadmapActive,
+  deleteRoadmap,
 } from "../controllers/roadmapController.js";
 
 const router = express.Router();
@@ -14,5 +15,7 @@ router.route("/generate").post(generateRoadmapWithAI);
 router.route("/").get(getRoadmaps).post(createRoadmap);
 
 router.route("/:id/active").patch(toggleRoadmapActive);
+
+router.route("/:id").delete(deleteRoadmap);
 
 export default router;

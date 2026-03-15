@@ -13,6 +13,36 @@ export const useAppStore = create((set, get) => ({
   isLoading: false,
   isGenerating: false,
   error: null,
+  isDarkMode: localStorage.getItem("theme") === "dark",
+
+  // --- THEME ACTIONS ---
+  toggleTheme: () => {
+    const newTheme = !get().isDarkMode;
+    set({ isDarkMode: newTheme });
+
+    if (newTheme) {
+      document.documentElement.classList.add("dark");
+      localStorage.setItem("theme", "dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+      localStorage.setItem("theme", "light");
+    }
+  },
+
+  initTheme: () => {
+    // Check local storage or the user's system preferences
+    if (
+      get().isDarkMode ||
+      (!("theme" in localStorage) &&
+        window.matchMedia("(prefers-color-scheme: dark)").matches)
+    ) {
+      document.documentElement.classList.add("dark");
+      set({ isDarkMode: true });
+    } else {
+      document.documentElement.classList.remove("dark");
+      set({ isDarkMode: false });
+    }
+  },
 
   // 1. Fetch tasks using the service
   fetchTasks: async () => {
@@ -136,6 +166,24 @@ export const useAppStore = create((set, get) => ({
       }));
     } catch (error) {
       console.error("Error toggling roadmap:", error);
+    }
+  },
+
+  deleteRoadmap: async (id) => {
+    try {
+      // 1. Call the service
+      await roadmapService.deleteRoadmap(id);
+
+      // 2. Update local state
+      set((state) => ({
+        roadmaps: state.roadmaps.filter((r) => r._id !== id),
+        tasks: state.tasks.filter((t) => t.roadmapId !== id),
+      }));
+
+      // 3. Refresh dependent data
+      get().fetchStreak();
+    } catch (error) {
+      console.error("Error deleting roadmap:", error);
     }
   },
 
