@@ -1,0 +1,27 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  /* The Smooth Light Theme Palette */
+  --color-forge-bg: #F8FAFC; 
+  --color-forge-surface: #FFFFFF; 
+  --color-forge-surfaceHover: #F1F5F9;
+  --color-forge-border: #E2E8F0;
+  
+  /* Rich, high-contrast text */
+  --color-forge-textPrimary: #0F172A; 
+  --color-forge-textSecondary: #64748B;
+  
+  /* Smooth Indigo Accent */
+  --color-forge-accent: #4F46E5; 
+  --color-forge-accentHover: #4338CA;
+  
+  --font-inter: 'Inter', sans-serif;
+}
+
+body {
+  background-color: var(--color-forge-bg);
+  color: var(--color-forge-textPrimary);
+  font-family: var(--font-inter);
+  -webkit-font-smoothing: antialiased;
+}
