@@ -20,9 +20,17 @@ export default function TaskDetailModal({
         </button>
 
         <div className="mb-8 pr-8">
-          <h3 className="text-2xl font-bold text-forge-textPrimary leading-tight mb-5">
+          <h3 className="text-2xl font-bold text-forge-textPrimary leading-tight mb-3">
             {task.title}
           </h3>
+          
+          {task.description && (
+            <div className="mb-5 max-h-[40vh] overflow-y-auto pr-2 custom-scrollbar">
+              <p className="text-sm text-forge-textSecondary/90 whitespace-pre-wrap leading-relaxed bg-forge-bg/50 p-4 rounded-xl border border-forge-border/50">
+                {task.description}
+              </p>
+            </div>
+          )}
 
           <div className="flex flex-col gap-3">
             <div className="flex items-center gap-3 text-sm text-forge-textSecondary font-medium p-3 bg-forge-bg rounded-lg border border-forge-border">

@@ -6,11 +6,14 @@ import {
   updateTask,
   deleteTask,
   getTaskStreak,
+  reorderTasks,
 } from "../controllers/taskController.js";
 
 const router = express.Router();
 
 router.get("/streak", getTaskStreak);
+
+router.patch("/reorder", reorderTasks);
 
 router.route("/").get(getTasks).post(createTask);
 

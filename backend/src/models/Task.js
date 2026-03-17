@@ -8,10 +8,16 @@ const taskSchema = new mongoose.Schema(
       required: true,
     },
     title: { type: String, required: true },
-    moduleName: { type: String, required: true }, // e.g., "Express.js" or "React Hooks"
+    moduleId: { 
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Module",
+      required: true
+    },
+    order: { type: Number, default: 0 },
     durationMinutes: { type: Number, required: true },
     isCompleted: { type: Boolean, default: false },
     completedAt: { type: Date },
+    description: { type: String, default: "" },
     notes: { type: String, default: "" }, // Where you'll store your Markdown notes later
   },
   { timestamps: true },

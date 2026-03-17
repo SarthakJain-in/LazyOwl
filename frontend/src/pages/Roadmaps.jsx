@@ -19,10 +19,6 @@ export default function Roadmaps() {
   const [topic, setTopic] = useState("");
   const [category, setCategory] = useState("");
 
-  const [isCustomModalOpen, setIsCustomModalOpen] = useState(false);
-  const [customTitle, setCustomTitle] = useState("");
-  const [customCategory, setCustomCategory] = useState("");
-
   useEffect(() => {
     fetchRoadmaps();
   }, [fetchRoadmaps]);
@@ -37,20 +33,6 @@ export default function Roadmaps() {
     setIsModalOpen(false);
     setTopic("");
     setCategory("");
-  };
-
-  const handleCreateCustom = async (e) => {
-    e.preventDefault();
-    if (!customTitle) return;
-
-    await addRoadmap({
-      title: customTitle,
-      category: customCategory || "General",
-    });
-
-    setIsCustomModalOpen(false);
-    setCustomTitle("");
-    setCustomCategory("");
   };
 
   if (isLoading && roadmaps.length === 0) {
@@ -74,13 +56,13 @@ export default function Roadmaps() {
           </p>
         </div>
         <div className="flex gap-3">
-          <button
-            onClick={() => setIsCustomModalOpen(true)}
+          <Link
+            to="/roadmaps/new"
             className="flex items-center gap-2 bg-forge-surface border border-forge-border text-forge-textPrimary px-4 py-2 rounded-lg font-semibold hover:border-forge-accent transition-colors shadow-sm"
           >
             <Plus size={18} />
             <span className="hidden sm:inline">Create Path</span>
-          </button>
+          </Link>
           <button
             onClick={() => setIsModalOpen(true)}
             className="flex items-center gap-2 bg-forge-accent text-white px-4 py-2 rounded-lg font-semibold hover:bg-forge-accentHover transition-colors shadow-sm"
@@ -222,70 +204,6 @@ export default function Roadmaps() {
                 ) : (
                   "Build My Roadmap"
                 )}
-              </button>
-            </form>
-          </div>
-        </div>
-      )}
-      {/* Manual Roadmap Creation Modal */}
-      {isCustomModalOpen && (
-        <div className="fixed inset-0 bg-forge-textPrimary/20 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in duration-200">
-          <div className="bg-forge-surface w-full max-w-md rounded-2xl shadow-2xl border border-forge-border p-6 relative animate-in zoom-in-95 duration-200">
-            <button
-              onClick={() => setIsCustomModalOpen(false)}
-              className="absolute top-4 right-4 text-forge-textSecondary hover:text-red-500 transition-colors"
-            >
-              <X size={20} />
-            </button>
-
-            <div className="flex items-center gap-3 mb-6">
-              <div className="p-2 bg-indigo-50 rounded-lg text-forge-accent">
-                <Map size={24} />
-              </div>
-              <div>
-                <h3 className="text-xl font-bold text-forge-textPrimary">
-                  Create Learning Path
-                </h3>
-                <p className="text-xs text-forge-textSecondary mt-0.5">
-                  Start mapping from scratch
-                </p>
-              </div>
-            </div>
-
-            <form onSubmit={handleCreateCustom} className="space-y-4">
-              <div>
-                <label className="block text-sm font-semibold text-forge-textPrimary mb-1.5">
-                  Path Title
-                </label>
-                <input
-                  type="text"
-                  placeholder="e.g., Learn Advanced React"
-                  className="w-full p-3 bg-forge-bg border border-forge-border rounded-xl text-forge-textPrimary focus:outline-none focus:border-forge-accent transition-colors"
-                  value={customTitle}
-                  onChange={(e) => setCustomTitle(e.target.value)}
-                  autoFocus
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-semibold text-forge-textPrimary mb-1.5">
-                  Category (Optional)
-                </label>
-                <input
-                  type="text"
-                  placeholder="e.g., Frontend"
-                  className="w-full p-3 bg-forge-bg border border-forge-border rounded-xl text-forge-textPrimary focus:outline-none focus:border-forge-accent transition-colors"
-                  value={customCategory}
-                  onChange={(e) => setCustomCategory(e.target.value)}
-                />
-              </div>
-
-              <button
-                type="submit"
-                disabled={!customTitle}
-                className="w-full py-3 mt-2 bg-forge-accent text-white rounded-xl font-bold hover:bg-forge-accentHover transition-colors flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
-              >
-                Create Path
               </button>
             </form>
           </div>

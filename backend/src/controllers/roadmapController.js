@@ -1,5 +1,6 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import Task from "../models/Task.js";
+import Module from "../models/Module.js";
 import Roadmap from "../models/Roadmap.js";
 
 // @desc    Get all roadmaps
@@ -88,14 +89,24 @@ export const generateRoadmapWithAI = async (req, res) => {
       category: category || "Generated Path",
     });
 
-    // 5. Save all the generated Tasks to MongoDB, linking them to the new Roadmap
+    // 5. Save all the generated Modules to MongoDB
+    const modulesToInsert = aiData.modules.map((mod, index) => ({
+      roadmapId: newRoadmap._id,
+      title: mod.moduleName,
+      order: index,
+    }));
+    const insertedModules = await Module.insertMany(modulesToInsert);
+
+    // 6. Save all the generated Tasks to MongoDB, linking them to the Roadmap and new Modules
     const tasksToInsert = [];
-    aiData.modules.forEach((mod) => {
-      mod.tasks.forEach((task) => {
+    aiData.modules.forEach((mod, modIndex) => {
+      const parentModule = insertedModules[modIndex];
+      mod.tasks.forEach((task, taskIndex) => {
         tasksToInsert.push({
           roadmapId: newRoadmap._id,
           title: task.title,
-          moduleName: mod.moduleName,
+          moduleId: parentModule._id,
+          order: taskIndex,
           durationMinutes: task.durationMinutes,
         });
       });
@@ -114,6 +125,23 @@ export const generateRoadmapWithAI = async (req, res) => {
     res
       .status(500)
       .json({ message: "Failed to generate roadmap", error: error.message });
+  }
+};
+
+// @desc    Update a roadmap
+// @route   PUT /api/roadmaps/:id
+export const updateRoadmap = async (req, res) => {
+  try {
+    const { title, category } = req.body;
+    const updatedRoadmap = await Roadmap.findByIdAndUpdate(
+      req.params.id,
+      { $set: { title, category } },
+      { new: true, runValidators: true }
+    );
+    if (!updatedRoadmap) return res.status(404).json({ message: "Roadmap not found" });
+    res.status(200).json(updatedRoadmap);
+  } catch (error) {
+    res.status(400).json({ message: "Error updating roadmap", error: error.message });
   }
 };
 
@@ -145,8 +173,9 @@ export const deleteRoadmap = async (req, res) => {
       return res.status(404).json({ message: "Roadmap not found" });
     }
 
-    // 2. THE CASCADE: Delete all tasks belonging to this roadmap
+    // 2. THE CASCADE: Delete all tasks and modules belonging to this roadmap
     await Task.deleteMany({ roadmapId: id });
+    await Module.deleteMany({ roadmapId: id });
 
     // 3. Delete the roadmap itself
     await roadmap.deleteOne();

@@ -11,7 +11,6 @@ export const roadmapService = {
     return response.json();
   },
 
-  // Create a new roadmap
   createRoadmap: async (roadmapData) => {
     const response = await fetch(API_URL, {
       method: "POST",
@@ -22,6 +21,20 @@ export const roadmapService = {
     });
     if (!response.ok) {
       throw new Error("Failed to create roadmap");
+    }
+    return response.json();
+  },
+
+  updateRoadmap: async (id, roadmapData) => {
+    const response = await fetch(`${API_URL}/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(roadmapData),
+    });
+    if (!response.ok) {
+      throw new Error("Failed to update roadmap");
     }
     return response.json();
   },

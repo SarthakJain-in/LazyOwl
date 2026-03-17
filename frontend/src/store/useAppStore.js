@@ -1,11 +1,13 @@
 import { create } from "zustand";
 import { taskService } from "../services/taskService";
 import { roadmapService } from "../services/roadmapService";
+import { moduleService } from "../services/moduleService";
 import { noteService } from "../services/noteService";
 import { noteFolderService } from "../services/noteFolderService";
 
 export const useAppStore = create((set, get) => ({
   tasks: [],
+  modules: [],
   roadmaps: [],
   notes: [],
   noteFolders: [],
@@ -121,6 +123,28 @@ export const useAppStore = create((set, get) => ({
     }
   },
 
+  updateTaskOrder: async (tasksArray) => {
+    const previousTasks = get().tasks;
+    
+    // Optimistic UI update
+    set({
+      tasks: previousTasks.map((t) => {
+        const updated = tasksArray.find((ut) => ut._id === t._id);
+        return updated ? { ...t, order: updated.order, moduleId: updated.moduleId } : t;
+      }),
+    });
+
+    try {
+      await taskService.reorderTasks(tasksArray);
+    } catch (error) {
+      console.error("Error reordering tasks:", error);
+      // Revert if error
+      set({ tasks: previousTasks });
+    }
+  },
+
+
+
   deleteTask: async (id) => {
     try {
       await taskService.deleteTask(id);
@@ -130,6 +154,68 @@ export const useAppStore = create((set, get) => ({
       get().fetchRoadmaps(); // Keep roadmaps in sync with backend
     } catch (error) {
       console.error("Error deleting task:", error);
+    }
+  },
+
+  // --- MODULE ACTIONS ---
+  fetchModules: async () => {
+    try {
+      const data = await moduleService.getModules();
+      set({ modules: data });
+    } catch (error) {
+      console.error("Error fetching modules:", error);
+    }
+  },
+
+  addModule: async (moduleData) => {
+    try {
+      const newModule = await moduleService.createModule(moduleData);
+      set((state) => ({ modules: [...state.modules, newModule] }));
+      return newModule;
+    } catch (error) {
+      console.error("Error creating module:", error);
+    }
+  },
+
+  updateModule: async (id, moduleData) => {
+    try {
+      const updatedModule = await moduleService.updateModule(id, moduleData);
+      set((state) => ({
+        modules: state.modules.map((m) => (m._id === id ? updatedModule : m)),
+      }));
+    } catch (error) {
+      console.error("Error updating module:", error);
+    }
+  },
+
+  updateModuleOrder: async (modulesArray) => {
+    const previousModules = get().modules;
+    
+    // Optimistic UI update
+    set({
+      modules: previousModules.map((m) => {
+        const updated = modulesArray.find((um) => um._id === m._id);
+        return updated ? { ...m, order: updated.order } : m;
+      }),
+    });
+
+    try {
+      await moduleService.reorderModules(modulesArray);
+    } catch (error) {
+      console.error("Error reordering modules:", error);
+      set({ modules: previousModules });
+    }
+  },
+
+  deleteModule: async (id) => {
+    try {
+      await moduleService.deleteModule(id);
+      set((state) => ({
+        modules: state.modules.filter((m) => m._id !== id),
+        tasks: state.tasks.filter((t) => t.moduleId !== id),
+      }));
+    } catch (error) {
+      console.error("Error deleting module:", error);
     }
   },
 
@@ -155,6 +241,17 @@ export const useAppStore = create((set, get) => ({
     }
   },
 
+  updateRoadmap: async (id, roadmapData) => {
+    try {
+      const updatedRoadmap = await roadmapService.updateRoadmap(id, roadmapData);
+      set((state) => ({
+        roadmaps: state.roadmaps.map((r) => (r._id === id ? updatedRoadmap : r)),
+      }));
+    } catch (error) {
+      console.error("Error updating roadmap:", error);
+    }
+  },
+
   toggleRoadmapActive: async (id) => {
     try {
       // Assuming you added the api call to a roadmapService object
@@ -177,6 +274,7 @@ export const useAppStore = create((set, get) => ({
       // 2. Update local state
       set((state) => ({
         roadmaps: state.roadmaps.filter((r) => r._id !== id),
+        modules: state.modules.filter((m) => m.roadmapId !== id),
         tasks: state.tasks.filter((t) => t.roadmapId !== id),
       }));
 
@@ -195,10 +293,12 @@ export const useAppStore = create((set, get) => ({
 
       // Refresh both roadmaps and tasks to show the newly generated data!
       const updatedRoadmaps = await roadmapService.getAllRoadmaps();
+      const updatedModules = await moduleService.getModules();
       const updatedTasks = await taskService.getTasks();
 
       set({
         roadmaps: updatedRoadmaps,
+        modules: updatedModules,
         tasks: updatedTasks,
         isGenerating: false,
       });

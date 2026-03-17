@@ -39,13 +39,14 @@ export const getTasks = async (req, res) => {
 // @route   POST /api/tasks
 export const createTask = async (req, res) => {
   try {
-    const { roadmapId, title, moduleName, durationMinutes } = req.body;
+    const { roadmapId, title, moduleId, durationMinutes, description } = req.body;
 
     const newTask = await Task.create({
       roadmapId,
       title,
-      moduleName: moduleName || "Custom Tasks",
+      moduleId,
       durationMinutes: durationMinutes || 30,
+      description: description || "",
     });
 
     // Recalculate roadmap progress (adding a task lowers the completion percentage)
@@ -89,11 +90,11 @@ export const updateTaskStatus = async (req, res) => {
 // @route   PUT /api/tasks/:id
 export const updateTask = async (req, res) => {
   try {
-    const { title, moduleName, durationMinutes } = req.body;
+    const { title, moduleId, durationMinutes, description } = req.body;
 
     const updatedTask = await Task.findByIdAndUpdate(
       req.params.id,
-      { $set: { title, moduleName, durationMinutes } },
+      { $set: { title, moduleId, durationMinutes, description } },
       { new: true, runValidators: true },
     );
 
@@ -187,5 +188,31 @@ export const getTaskStreak = async (req, res) => {
     res
       .status(500)
       .json({ message: "Error calculating streak", error: error.message });
+  }
+};
+
+// @desc    Bulk update task orders and modules
+// @route   PATCH /api/tasks/reorder
+export const reorderTasks = async (req, res) => {
+  try {
+    const { tasks } = req.body; // Array of { _id, order, moduleId }
+
+    // Create bulk operations for MongoDB
+    const bulkOps = tasks.map((task) => ({
+      updateOne: {
+        filter: { _id: task._id },
+        update: { order: task.order, moduleId: task.moduleId },
+      },
+    }));
+
+    if (bulkOps.length > 0) {
+      await Task.bulkWrite(bulkOps);
+    }
+
+    res.status(200).json({ message: "Tasks reordered successfully" });
+  } catch (error) {
+    res
+      .status(400)
+      .json({ message: "Error reordering tasks", error: error.message });
   }
 };

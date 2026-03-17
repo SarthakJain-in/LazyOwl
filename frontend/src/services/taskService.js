@@ -37,6 +37,16 @@ export const taskService = {
     return response.json();
   },
 
+  reorderTasks: async (tasksArray) => {
+    const response = await fetch(`${API_URL}/reorder`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ tasks: tasksArray }),
+    });
+    if (!response.ok) throw new Error("Failed to reorder tasks");
+    return response.json();
+  },
+
   deleteTask: async (id) => {
     const response = await fetch(`${API_URL}/${id}`, {
       method: "DELETE",
