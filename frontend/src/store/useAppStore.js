@@ -4,6 +4,10 @@ import { roadmapService } from "../services/roadmapService";
 import { moduleService } from "../services/moduleService";
 import { noteService } from "../services/noteService";
 import { noteFolderService } from "../services/noteFolderService";
+import { authService } from "../services/authService";
+import { getAuthHeaders } from "../services/authService";
+
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 export const useAppStore = create((set, get) => ({
   tasks: [],
@@ -14,8 +18,12 @@ export const useAppStore = create((set, get) => ({
   streak: 0,
   isLoading: false,
   isGenerating: false,
+  isImporting: false,
   error: null,
   isDarkMode: localStorage.getItem("theme") === "dark",
+
+  // --- AUTH STATE ---
+  user: authService.getCurrentUser(),
 
   // --- THEME ACTIONS ---
   toggleTheme: () => {
@@ -46,6 +54,45 @@ export const useAppStore = create((set, get) => ({
     }
   },
 
+  // --- AUTH ACTIONS ---
+  login: async (email, password) => {
+    set({ isLoading: true, error: null });
+    try {
+      const user = await authService.login({ email, password });
+      set({ user, isLoading: false });
+      return user;
+    } catch (error) {
+      set({ error: error.message, isLoading: false });
+      throw error;
+    }
+  },
+
+  register: async (name, email, password) => {
+    set({ isLoading: true, error: null });
+    try {
+      const user = await authService.register({ name, email, password });
+      set({ user, isLoading: false });
+      return user;
+    } catch (error) {
+      set({ error: error.message, isLoading: false });
+      throw error;
+    }
+  },
+
+  logout: () => {
+    authService.logout();
+    set({
+      user: null,
+      tasks: [],
+      modules: [],
+      roadmaps: [],
+      notes: [],
+      noteFolders: [],
+      streak: 0,
+      error: null,
+    });
+  },
+
   // 1. Fetch tasks using the service
   fetchTasks: async () => {
     set({ isLoading: true, error: null });
@@ -60,7 +107,9 @@ export const useAppStore = create((set, get) => ({
 
   fetchStreak: async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/tasks/streak");
+      const response = await fetch(`${BASE_URL}/api/tasks/streak`, {
+        headers: { ...getAuthHeaders() },
+      });
       const data = await response.json();
       set({ streak: data.streak });
     } catch (error) {
@@ -305,6 +354,30 @@ export const useAppStore = create((set, get) => ({
     } catch (error) {
       console.error("AI Generation Error:", error);
       set({ error: error.message, isGenerating: false });
+    }
+  },
+
+  // --- PDF IMPORT ---
+  importRoadmapFromPDF: async (file, category) => {
+    set({ isImporting: true, error: null });
+    try {
+      await roadmapService.importRoadmapFromPDF(file, category);
+
+      // Refresh all data to show the newly imported roadmap
+      const updatedRoadmaps = await roadmapService.getAllRoadmaps();
+      const updatedModules = await moduleService.getModules();
+      const updatedTasks = await taskService.getTasks();
+
+      set({
+        roadmaps: updatedRoadmaps,
+        modules: updatedModules,
+        tasks: updatedTasks,
+        isImporting: false,
+      });
+    } catch (error) {
+      console.error("PDF Import Error:", error);
+      set({ error: error.message, isImporting: false });
+      throw error; // Re-throw so the UI can show the error message
     }
   },
 

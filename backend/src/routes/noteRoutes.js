@@ -1,4 +1,5 @@
 import express from "express";
+import { protect } from "../middleware/authMiddleware.js";
 import {
   getNotes,
   createNote,
@@ -7,6 +8,9 @@ import {
 } from "../controllers/noteController.js";
 
 const router = express.Router();
+
+// All routes below require authentication
+router.use(protect);
 
 router.route("/").get(getNotes).post(createNote);
 

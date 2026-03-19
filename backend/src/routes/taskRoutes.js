@@ -1,4 +1,5 @@
 import express from "express";
+import { protect } from "../middleware/authMiddleware.js";
 import {
   getTasks,
   createTask,
@@ -10,6 +11,9 @@ import {
 } from "../controllers/taskController.js";
 
 const router = express.Router();
+
+// All routes below require authentication
+router.use(protect);
 
 router.get("/streak", getTaskStreak);
 

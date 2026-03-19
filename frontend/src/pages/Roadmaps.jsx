@@ -1,7 +1,21 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Link } from "react-router-dom";
 import { useAppStore } from "../store/useAppStore";
-import { Map, Plus, Sparkles, X, Loader2, Pin, PinOff } from "lucide-react";
+import { roadmapService } from "../services/roadmapService";
+import {
+  Map,
+  Plus,
+  Sparkles,
+  X,
+  Loader2,
+  Pin,
+  PinOff,
+  FileUp,
+  Download,
+  FileText,
+  CheckCircle2,
+  AlertCircle,
+} from "lucide-react";
 
 export default function Roadmaps() {
   const {
@@ -10,14 +24,25 @@ export default function Roadmaps() {
     isLoading,
     generateRoadmap,
     isGenerating,
+    isImporting,
+    importRoadmapFromPDF,
     toggleRoadmapActive,
     addRoadmap,
   } = useAppStore();
 
-  // Modal State
+  // AI Modal State
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [topic, setTopic] = useState("");
   const [category, setCategory] = useState("");
+
+  // PDF Import Modal State
+  const [isImportModalOpen, setIsImportModalOpen] = useState(false);
+  const [importCategory, setImportCategory] = useState("");
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [importError, setImportError] = useState("");
+  const [importSuccess, setImportSuccess] = useState("");
+  const [isDragging, setIsDragging] = useState(false);
+  const fileInputRef = useRef(null);
 
   useEffect(() => {
     fetchRoadmaps();
@@ -33,6 +58,75 @@ export default function Roadmaps() {
     setIsModalOpen(false);
     setTopic("");
     setCategory("");
+  };
+
+  // --- PDF Import Handlers ---
+  const handleFileSelect = (file) => {
+    setImportError("");
+    setImportSuccess("");
+    if (file && file.type === "application/pdf") {
+      setSelectedFile(file);
+    } else if (file) {
+      setImportError("Only PDF files are allowed.");
+      setSelectedFile(null);
+    }
+  };
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (e) => {
+    e.preventDefault();
+    setIsDragging(false);
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    setIsDragging(false);
+    const file = e.dataTransfer.files[0];
+    handleFileSelect(file);
+  };
+
+  const handleImport = async (e) => {
+    e.preventDefault();
+    if (!selectedFile) return;
+
+    setImportError("");
+    setImportSuccess("");
+
+    try {
+      await importRoadmapFromPDF(selectedFile, importCategory || "Imported Path");
+      setImportSuccess("Roadmap imported successfully! 🎉");
+      // Auto-close after a brief moment
+      setTimeout(() => {
+        setIsImportModalOpen(false);
+        setSelectedFile(null);
+        setImportCategory("");
+        setImportSuccess("");
+        setImportError("");
+      }, 1500);
+    } catch (error) {
+      setImportError(error.message || "Failed to import roadmap. Please try again.");
+    }
+  };
+
+  const handleDownloadSample = async () => {
+    try {
+      await roadmapService.downloadSamplePDF();
+    } catch (error) {
+      console.error("Error downloading sample:", error);
+    }
+  };
+
+  const closeImportModal = () => {
+    if (isImporting) return; // Don't allow closing while importing
+    setIsImportModalOpen(false);
+    setSelectedFile(null);
+    setImportCategory("");
+    setImportError("");
+    setImportSuccess("");
   };
 
   if (isLoading && roadmaps.length === 0) {
@@ -63,6 +157,13 @@ export default function Roadmaps() {
             <Plus size={18} />
             <span className="hidden sm:inline">Create Path</span>
           </Link>
+          <button
+            onClick={() => setIsImportModalOpen(true)}
+            className="flex items-center gap-2 bg-forge-surface border border-forge-border text-forge-textPrimary px-4 py-2 rounded-lg font-semibold hover:border-emerald-500 hover:text-emerald-500 transition-colors shadow-sm"
+          >
+            <FileUp size={18} />
+            <span className="hidden sm:inline">Import PDF</span>
+          </button>
           <button
             onClick={() => setIsModalOpen(true)}
             className="flex items-center gap-2 bg-forge-accent text-white px-4 py-2 rounded-lg font-semibold hover:bg-forge-accentHover transition-colors shadow-sm"
@@ -203,6 +304,151 @@ export default function Roadmaps() {
                   </>
                 ) : (
                   "Build My Roadmap"
+                )}
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* PDF Import Modal Overlay */}
+      {isImportModalOpen && (
+        <div className="fixed inset-0 bg-forge-textPrimary/20 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in duration-200">
+          <div className="bg-forge-surface w-full max-w-md rounded-2xl shadow-2xl border border-forge-border p-6 relative animate-in zoom-in-95 duration-200">
+            <button
+              onClick={closeImportModal}
+              disabled={isImporting}
+              className="absolute top-4 right-4 text-forge-textSecondary hover:text-red-500 transition-colors disabled:opacity-50"
+            >
+              <X size={20} />
+            </button>
+
+            {/* Header */}
+            <div className="flex items-center gap-3 mb-6">
+              <div className="p-2 bg-emerald-50 dark:bg-emerald-900/30 rounded-lg text-emerald-600">
+                <FileUp size={24} />
+              </div>
+              <div>
+                <h3 className="text-xl font-bold text-forge-textPrimary">
+                  Import from PDF
+                </h3>
+                <p className="text-xs text-forge-textSecondary mt-0.5">
+                  Upload a roadmap PDF — AI parses it for you
+                </p>
+              </div>
+            </div>
+
+            <form onSubmit={handleImport} className="space-y-4">
+              {/* Drag & Drop Zone */}
+              <div
+                onDragOver={handleDragOver}
+                onDragLeave={handleDragLeave}
+                onDrop={handleDrop}
+                onClick={() => !isImporting && fileInputRef.current?.click()}
+                className={`relative border-2 border-dashed rounded-xl p-6 text-center cursor-pointer transition-all duration-200 ${
+                  isDragging
+                    ? "border-emerald-500 bg-emerald-50/10"
+                    : selectedFile
+                    ? "border-emerald-500 bg-emerald-50/5"
+                    : "border-forge-border hover:border-emerald-500/50 hover:bg-forge-bg/50"
+                } ${isImporting ? "pointer-events-none opacity-60" : ""}`}
+              >
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept=".pdf,application/pdf"
+                  onChange={(e) => handleFileSelect(e.target.files[0])}
+                  className="hidden"
+                  disabled={isImporting}
+                />
+
+                {selectedFile ? (
+                  <div className="flex items-center justify-center gap-3">
+                    <div className="p-2 bg-emerald-100 dark:bg-emerald-900/40 rounded-lg">
+                      <FileText size={20} className="text-emerald-600" />
+                    </div>
+                    <div className="text-left">
+                      <p className="text-sm font-semibold text-forge-textPrimary truncate max-w-[200px]">
+                        {selectedFile.name}
+                      </p>
+                      <p className="text-xs text-forge-textSecondary">
+                        {(selectedFile.size / 1024).toFixed(1)} KB — Click to change
+                      </p>
+                    </div>
+                  </div>
+                ) : (
+                  <>
+                    <FileUp
+                      size={32}
+                      className="mx-auto text-forge-textSecondary mb-2"
+                    />
+                    <p className="text-sm font-semibold text-forge-textPrimary">
+                      Drop your PDF here or click to browse
+                    </p>
+                    <p className="text-xs text-forge-textSecondary mt-1">
+                      Max 10 MB • PDF files only
+                    </p>
+                  </>
+                )}
+              </div>
+
+              {/* Category Input */}
+              <div>
+                <label className="block text-sm font-semibold text-forge-textPrimary mb-1.5">
+                  Category (Optional)
+                </label>
+                <input
+                  type="text"
+                  placeholder="e.g., Frontend, DevOps, Math..."
+                  className="w-full p-3 bg-forge-bg border border-forge-border rounded-xl text-forge-textPrimary focus:outline-none focus:border-emerald-500 transition-colors"
+                  value={importCategory}
+                  onChange={(e) => setImportCategory(e.target.value)}
+                  disabled={isImporting}
+                />
+              </div>
+
+              {/* Download Sample */}
+              <button
+                type="button"
+                onClick={handleDownloadSample}
+                className="w-full flex items-center justify-center gap-2 py-2 text-sm text-forge-textSecondary hover:text-emerald-500 transition-colors"
+              >
+                <Download size={14} />
+                Download sample PDF template
+              </button>
+
+              {/* Error Message */}
+              {importError && (
+                <div className="flex items-start gap-2 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl text-red-600 dark:text-red-400 text-sm">
+                  <AlertCircle size={16} className="mt-0.5 shrink-0" />
+                  <span>{importError}</span>
+                </div>
+              )}
+
+              {/* Success Message */}
+              {importSuccess && (
+                <div className="flex items-center gap-2 p-3 bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800 rounded-xl text-emerald-600 dark:text-emerald-400 text-sm">
+                  <CheckCircle2 size={16} className="shrink-0" />
+                  <span>{importSuccess}</span>
+                </div>
+              )}
+
+              {/* Submit Button */}
+              <button
+                type="submit"
+                disabled={isImporting || !selectedFile}
+                className="w-full py-3 mt-2 bg-emerald-600 text-white rounded-xl font-bold hover:bg-emerald-700 transition-colors flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
+              >
+                {isImporting ? (
+                  <>
+                    <Loader2 size={20} className="animate-spin" />
+                    <span>Parsing & creating roadmap...</span>
+                  </>
+                ) : (
+                  <>
+                    <FileUp size={18} />
+                    Import Roadmap
+                  </>
                 )}
               </button>
             </form>

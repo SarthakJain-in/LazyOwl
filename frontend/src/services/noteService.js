@@ -1,9 +1,13 @@
+import { getAuthHeaders } from "./authService";
+
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 const API_URL = `${BASE_URL}/api/notes`;
 
 export const noteService = {
   getAllNotes: async () => {
-    const response = await fetch(API_URL);
+    const response = await fetch(API_URL, {
+      headers: { ...getAuthHeaders() },
+    });
     if (!response.ok) throw new Error("Failed to fetch notes");
     return response.json();
   },
@@ -11,7 +15,7 @@ export const noteService = {
   createNote: async (noteData) => {
     const response = await fetch(API_URL, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", ...getAuthHeaders() },
       body: JSON.stringify(noteData),
     });
     if (!response.ok) throw new Error("Failed to create note");
@@ -21,7 +25,7 @@ export const noteService = {
   updateNote: async (id, noteData) => {
     const response = await fetch(`${API_URL}/${id}`, {
       method: "PUT",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", ...getAuthHeaders() },
       body: JSON.stringify(noteData),
     });
     if (!response.ok) throw new Error("Failed to update note");
@@ -31,6 +35,7 @@ export const noteService = {
   deleteNote: async (id) => {
     const response = await fetch(`${API_URL}/${id}`, {
       method: "DELETE",
+      headers: { ...getAuthHeaders() },
     });
     if (!response.ok) throw new Error("Failed to delete note");
     return response.json();

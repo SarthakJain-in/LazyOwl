@@ -1,12 +1,10 @@
 import Note from "../models/Note.js";
 
-const dummyUserId = "60d0fe4f5311236168a109ca"; // Keeping it single-player
-
 // @desc    Get all notes
 // @route   GET /api/notes
 export const getNotes = async (req, res) => {
   try {
-    const notes = await Note.find({ userId: dummyUserId }).sort({
+    const notes = await Note.find({ userId: req.user._id }).sort({
       updatedAt: -1,
     });
     res.status(200).json(notes);
@@ -23,7 +21,7 @@ export const createNote = async (req, res) => {
   try {
     const { title, folderId, content } = req.body;
     const newNote = await Note.create({
-      userId: dummyUserId,
+      userId: req.user._id,
       title: title || "Untitled Note",
       folderId: folderId || null, // null means it's a loose file
       content: content || "",

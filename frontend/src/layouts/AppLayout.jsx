@@ -1,9 +1,17 @@
-import { Outlet, Link, useLocation } from "react-router-dom";
-import { LayoutDashboard, Map, Focus, BookOpen } from "lucide-react";
+import { Outlet, Link, useLocation, useNavigate } from "react-router-dom";
+import { LayoutDashboard, Map, Focus, BookOpen, LogOut } from "lucide-react";
 import ThemeToggle from "../components/ThemeToggle";
+import { useAppStore } from "../store/useAppStore";
 
 export default function AppLayout() {
   const location = useLocation();
+  const navigate = useNavigate();
+  const { user, logout } = useAppStore();
+
+  const handleLogout = () => {
+    logout();
+    navigate("/login");
+  };
 
   const navItems = [
     { name: "Dashboard", path: "/", icon: LayoutDashboard },
@@ -58,6 +66,32 @@ export default function AppLayout() {
         <nav className="flex-1">
           <NavLinks isMobile={false} />
         </nav>
+
+        {/* User Info & Logout */}
+        <div className="border-t border-forge-border pt-4 mt-4">
+          {user && (
+            <div className="flex items-center gap-3 px-3 mb-3">
+              <div className="w-8 h-8 rounded-full bg-forge-accent flex items-center justify-center text-white text-sm font-bold">
+                {user.name?.charAt(0).toUpperCase()}
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-semibold text-forge-textPrimary truncate">
+                  {user.name}
+                </p>
+                <p className="text-xs text-forge-textSecondary truncate">
+                  {user.email}
+                </p>
+              </div>
+            </div>
+          )}
+          <button
+            onClick={handleLogout}
+            className="flex items-center gap-3 w-full p-3 rounded-xl text-forge-textSecondary hover:bg-red-500/10 hover:text-red-400 transition-colors"
+          >
+            <LogOut size={20} />
+            <span className="font-medium">Logout</span>
+          </button>
+        </div>
       </aside>
 
       {/* Main Content Area */}
@@ -70,6 +104,13 @@ export default function AppLayout() {
       {/* Mobile Bottom Navigation */}
       <nav className="md:hidden fixed bottom-0 w-full bg-forge-surface border-t border-forge-border flex px-2 py-2 pb-safe z-50 shadow-lg">
         <NavLinks isMobile={true} />
+        <button
+          onClick={handleLogout}
+          className="flex flex-col items-center justify-center flex-1 p-3 rounded-xl text-forge-textSecondary hover:text-red-400 transition-colors"
+        >
+          <LogOut size={20} />
+          <span className="text-[10px] mt-1 font-medium">Logout</span>
+        </button>
       </nav>
     </div>
   );

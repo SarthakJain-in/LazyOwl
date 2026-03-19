@@ -22,11 +22,14 @@ const syncRoadmapProgress = async (roadmapId) => {
   });
 };
 
-// @desc    Get all tasks
+// @desc    Get all tasks for the authenticated user's roadmaps
 // @route   GET /api/tasks
 export const getTasks = async (req, res) => {
   try {
-    const tasks = await Task.find().sort({ createdAt: -1 });
+    // Find all roadmaps belonging to this user, then find tasks for those roadmaps
+    const userRoadmaps = await Roadmap.find({ userId: req.user._id }).select("_id");
+    const roadmapIds = userRoadmaps.map((r) => r._id);
+    const tasks = await Task.find({ roadmapId: { $in: roadmapIds } }).sort({ createdAt: -1 });
     res.status(200).json(tasks);
   } catch (error) {
     res
@@ -137,10 +140,12 @@ export const deleteTask = async (req, res) => {
 // @route   GET /api/tasks/streak
 export const getTaskStreak = async (req, res) => {
   try {
-    const dummyUserId = "60d0fe4f5311236168a109ca";
-    // 1. Get all unique dates where at least one task was completed
+    // Get all tasks belonging to the authenticated user's roadmaps
+    const userRoadmaps = await Roadmap.find({ userId: req.user._id }).select("_id");
+    const roadmapIds = userRoadmaps.map((r) => r._id);
+
     const completedTasks = await Task.find({
-      userId: dummyUserId,
+      roadmapId: { $in: roadmapIds },
       isCompleted: true,
     })
       .select("completedAt")

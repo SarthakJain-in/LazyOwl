@@ -1,13 +1,11 @@
 import NoteFolder from "../models/NoteFolder.js";
 import Note from "../models/Note.js";
 
-const dummyUserId = "60d0fe4f5311236168a109ca";
-
 // @desc    Get all note folders
 // @route   GET /api/note-folders
 export const getNoteFolders = async (req, res) => {
   try {
-    const noteFolders = await NoteFolder.find({ userId: dummyUserId }).sort({
+    const noteFolders = await NoteFolder.find({ userId: req.user._id }).sort({
       folderName: 1,
     });
     res.status(200).json(noteFolders);
@@ -25,7 +23,7 @@ export const createNoteFolder = async (req, res) => {
     const { folderName } = req.body;
 
     const existingFolder = await NoteFolder.findOne({
-      userId: dummyUserId,
+      userId: req.user._id,
       folderName,
     });
     if (existingFolder) {
@@ -35,7 +33,7 @@ export const createNoteFolder = async (req, res) => {
     }
 
     const newNoteFolder = await NoteFolder.create({
-      userId: dummyUserId,
+      userId: req.user._id,
       folderName,
     });
     res.status(201).json(newNoteFolder);
@@ -80,7 +78,7 @@ export const deleteNoteFolder = async (req, res) => {
     await targetFolder.deleteOne();
 
     // The Magic: Cascade the delete using the folderId
-    await Note.deleteMany({ userId: dummyUserId, folderId: targetFolder._id });
+    await Note.deleteMany({ userId: req.user._id, folderId: targetFolder._id });
 
     res
       .status(200)
