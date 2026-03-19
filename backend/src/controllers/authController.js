@@ -11,24 +11,36 @@ const generateToken = (id) => {
 export const registerUser = async (req, res) => {
   try {
     const { name, email, password } = req.body;
+    console.log(`Registration attempt for: ${email}`);
+
+    if (!name || !email || !password) {
+      console.error("Registration failed: Missing required fields");
+      return res.status(400).json({ message: "Please provide name, email, and password" });
+    }
 
     const userExists = await User.findOne({ email });
     if (userExists) {
+      console.error(`Registration failed: User already exists (${email})`);
       return res.status(400).json({ message: "User already exists" });
     }
 
     const user = await User.create({ name, email, password });
+    console.log(`User created successfully: ${user._id}`);
+
+    const token = generateToken(user._id);
+    console.log("Token generated successfully");
 
     res.status(201).json({
       _id: user._id,
       name: user.name,
       email: user.email,
-      token: generateToken(user._id), // Send token immediately on register
+      token: token,
     });
   } catch (error) {
+    console.error("CRITICAL REGISTRATION ERROR:", error);
     res
       .status(400)
-      .json({ message: "Invalid user data", error: error.message });
+      .json({ message: "Registration failed", error: error.message });
   }
 };
 

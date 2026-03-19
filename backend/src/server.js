@@ -27,7 +27,7 @@ const app = express();
 
 // CORS Configuration — locked to specific origin in production
 const corsOptions = {
-  origin: process.env.NODE_ENV === "production"
+  origin: process.env.NODE_ENV === "production" && process.env.CLIENT_URL
     ? process.env.CLIENT_URL
     : "*",
   credentials: true,
@@ -35,6 +35,14 @@ const corsOptions = {
   allowedHeaders: ["Content-Type", "Authorization"],
 };
 app.use(cors(corsOptions));
+
+// Log critical env status on startup
+if (process.env.NODE_ENV === "production" && !process.env.JWT_SECRET) {
+  console.warn("WARNING: JWT_SECRET is not set in production! Auth will fail.");
+}
+if (process.env.NODE_ENV === "production" && !process.env.CLIENT_URL) {
+  console.warn("WARNING: CLIENT_URL is not set. CORS will fallback to allow all origins.");
+}
 
 app.use(express.json());
 
@@ -48,6 +56,20 @@ app.use("/api/modules", moduleRoutes);
 
 app.get("/", (req, res) => {
   res.send("LazyOwl API is running...");
+});
+
+// Catch-all route for non-existent API endpoints
+app.use("/api/*", (req, res) => {
+  res.status(404).json({ message: `API route ${req.originalUrl} not found` });
+});
+
+// Catch-all route for everything else (helping diagnose SPA 404s)
+app.use("*", (req, res) => {
+  res.status(404).send(`
+    <h1>LazyOwl API - 404</h1>
+    <p>The route <strong>${req.originalUrl}</strong> was not found on this server.</p>
+    <p>If you are trying to access the frontend, make sure it is deployed separately (e.g., to Vercel or Netlify) and that it is pointing to this backend URL.</p>
+  `);
 });
 
 const PORT = process.env.PORT || 5000;
