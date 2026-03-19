@@ -59,12 +59,12 @@ app.get("/", (req, res) => {
 });
 
 // Catch-all route for non-existent API endpoints
-app.use("/api/*", (req, res) => {
+app.use("/api/(.*)", (req, res) => {
   res.status(404).json({ message: `API route ${req.originalUrl} not found` });
 });
 
 // Catch-all route for everything else (helping diagnose SPA 404s)
-app.use("*", (req, res) => {
+app.use("(.*)", (req, res) => {
   res.status(404).send(`
     <h1>LazyOwl API - 404</h1>
     <p>The route <strong>${req.originalUrl}</strong> was not found on this server.</p>
