@@ -53,9 +53,9 @@ export default function Register() {
         </div>
 
         {/* Card */}
-        <div className="bg-forge-surface border border-forge-border rounded-2xl p-8 shadow-xl">
+        <div className="bg-forge-surface border border-forge-border rounded-3xl p-8 shadow-brand">
           <div className="flex items-center gap-3 mb-6">
-            <div className="p-2 rounded-xl bg-indigo-500/10">
+            <div className="p-2 rounded-xl bg-forge-accent/10">
               <UserPlus size={22} className="text-forge-accent" />
             </div>
             <h2 className="text-xl font-bold text-forge-textPrimary">
@@ -64,7 +64,7 @@ export default function Register() {
           </div>
 
           {error && (
-            <div className="mb-4 p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm">
+            <div className="mb-4 p-3 rounded-xl bg-forge-danger/10 border border-forge-danger/20 text-forge-danger text-sm">
               {error}
             </div>
           )}
@@ -87,7 +87,7 @@ export default function Register() {
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="Your name"
-                  className="w-full pl-10 pr-4 py-3 rounded-xl bg-forge-bg border border-forge-border text-forge-textPrimary placeholder:text-forge-textSecondary/50 focus:outline-none focus:ring-2 focus:ring-forge-accent/50 transition-all"
+                  className="w-full pl-10 pr-4 py-3 rounded-2xl bg-forge-bg border border-forge-border text-forge-textPrimary placeholder:text-forge-textSecondary/50 focus:outline-none focus:ring-2 focus:ring-forge-accent/50 transition-all"
                 />
               </div>
             </div>
@@ -109,7 +109,7 @@ export default function Register() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="you@example.com"
-                  className="w-full pl-10 pr-4 py-3 rounded-xl bg-forge-bg border border-forge-border text-forge-textPrimary placeholder:text-forge-textSecondary/50 focus:outline-none focus:ring-2 focus:ring-forge-accent/50 transition-all"
+                  className="w-full pl-10 pr-4 py-3 rounded-2xl bg-forge-bg border border-forge-border text-forge-textPrimary placeholder:text-forge-textSecondary/50 focus:outline-none focus:ring-2 focus:ring-forge-accent/50 transition-all"
                 />
               </div>
             </div>
@@ -131,7 +131,7 @@ export default function Register() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Min. 6 characters"
-                  className="w-full pl-10 pr-12 py-3 rounded-xl bg-forge-bg border border-forge-border text-forge-textPrimary placeholder:text-forge-textSecondary/50 focus:outline-none focus:ring-2 focus:ring-forge-accent/50 transition-all"
+                  className="w-full pl-10 pr-12 py-3 rounded-2xl bg-forge-bg border border-forge-border text-forge-textPrimary placeholder:text-forge-textSecondary/50 focus:outline-none focus:ring-2 focus:ring-forge-accent/50 transition-all"
                 />
                 <button
                   type="button"
@@ -160,7 +160,7 @@ export default function Register() {
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   placeholder="Confirm your password"
-                  className="w-full pl-10 pr-4 py-3 rounded-xl bg-forge-bg border border-forge-border text-forge-textPrimary placeholder:text-forge-textSecondary/50 focus:outline-none focus:ring-2 focus:ring-forge-accent/50 transition-all"
+                  className="w-full pl-10 pr-4 py-3 rounded-2xl bg-forge-bg border border-forge-border text-forge-textPrimary placeholder:text-forge-textSecondary/50 focus:outline-none focus:ring-2 focus:ring-forge-accent/50 transition-all"
                 />
               </div>
             </div>
@@ -170,7 +170,7 @@ export default function Register() {
               id="register-submit"
               type="submit"
               disabled={isSubmitting}
-              className="w-full py-3 rounded-xl bg-forge-accent text-white font-semibold hover:bg-indigo-600 focus:ring-2 focus:ring-forge-accent/50 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              className="w-full py-3 rounded-2xl bg-forge-accent text-white font-semibold hover:bg-forge-accentHover focus:ring-2 focus:ring-forge-accent/50 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-sm"
             >
               {isSubmitting ? (
                 <>

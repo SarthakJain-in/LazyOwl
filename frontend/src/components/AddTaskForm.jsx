@@ -55,7 +55,7 @@ export default function AddTaskForm() {
     return (
       <button
         onClick={() => setIsExpanded(true)}
-        className="w-full flex items-center justify-center gap-2 py-3 mb-4 rounded-xl border border-dashed border-forge-border text-forge-textSecondary hover:text-forge-accent hover:border-forge-accent hover:bg-indigo-50/50 transition-all font-medium shadow-sm"
+        className="w-full flex items-center justify-center gap-2 py-3 mb-4 rounded-xl border border-dashed border-forge-border text-forge-textSecondary hover:text-forge-accent hover:border-forge-accent hover:bg-forge-accent/5 transition-all font-medium shadow-sm"
       >
         <Plus size={20} /> Add New Task
       </button>

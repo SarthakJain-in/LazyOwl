@@ -224,27 +224,20 @@ export default function KnowledgeBase() {
   };
 
   return (
-    <div className="h-full flex flex-col animate-in fade-in duration-500 space-y-6 relative">
-      <div className="flex justify-between items-end">
-        <div>
-          <h2 className="text-3xl font-bold text-forge-textPrimary">
-            Knowledge Base
-          </h2>
-          <p className="text-forge-textSecondary mt-1">
-            Your personal Second Brain.
-          </p>
-        </div>
+    <div className="h-full flex flex-col animate-in fade-in duration-500 space-y-4 relative">
+      {/* Page Header Actions */}
+      <div className="flex justify-end items-end">
         <div className="flex items-center gap-3">
           <button
             onClick={openCreateFolderModal}
-            className="flex items-center gap-2 bg-forge-surface border border-forge-border text-forge-textPrimary px-4 py-2 rounded-lg font-semibold hover:border-forge-accent transition-colors shadow-sm"
+            className="flex items-center gap-2 bg-forge-surface border border-forge-border text-forge-textPrimary px-4 py-2 rounded-lg font-semibold hover:border-forge-accent transition-colors shadow-brand"
           >
             <FolderPlus size={18} className="text-forge-textSecondary" />
             <span className="hidden sm:inline">New Folder</span>
           </button>
           <button
             onClick={handleCreateNewNote}
-            className="flex items-center gap-2 bg-forge-accent text-white px-4 py-2 rounded-lg font-semibold hover:bg-forge-accentHover transition-colors shadow-sm"
+            className="flex items-center gap-2 bg-forge-accent text-white px-4 py-2 rounded-lg font-semibold hover:bg-forge-accentHover transition-colors shadow-brand"
           >
             <Plus size={20} />
             <span className="hidden sm:inline">New Note</span>
@@ -253,7 +246,7 @@ export default function KnowledgeBase() {
       </div>
 
       <div className="flex-1 grid grid-cols-1 md:grid-cols-3 gap-6 min-h-[60vh]">
-        <div className="col-span-1 bg-forge-surface border border-forge-border rounded-2xl p-4 flex flex-col shadow-sm max-h-[70vh]">
+        <div className="col-span-1 bg-forge-surface border border-forge-border rounded-xl p-4 flex flex-col shadow-brand max-h-[70vh]">
           <div className="mb-4 border-b border-forge-border pb-4">
             <div className="relative">
               <Search
@@ -265,7 +258,7 @@ export default function KnowledgeBase() {
                 placeholder="Search notes by name..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full bg-forge-bg border border-forge-border text-forge-textPrimary rounded-xl pl-9 pr-4 py-2 text-sm focus:outline-none focus:border-forge-accent transition-all"
+                className="w-full bg-forge-bg border border-forge-border text-forge-textPrimary rounded-lg pl-9 pr-4 py-2 text-sm focus:outline-none focus:border-forge-accent transition-all"
               />
             </div>
           </div>
@@ -289,9 +282,9 @@ export default function KnowledgeBase() {
                         onDragOver={(e) => handleDragOver(e, folder._id)}
                         onDragLeave={handleDragLeave}
                         onDrop={(e) => handleDrop(e, folder._id)}
-                        className={`flex items-center group w-full py-1.5 px-2 rounded-lg transition-colors cursor-pointer border-2 ${
+                        className={`flex items-center group w-full py-1.5 px-2 rounded-xl transition-colors cursor-pointer border-2 ${
                           dragOverFolderId === folder._id
-                            ? "bg-indigo-50 border-forge-accent border-dashed"
+                            ? "bg-forge-accent/10 border-forge-accent border-dashed"
                             : "border-transparent hover:bg-forge-surfaceHover"
                         }`}
                       >
@@ -318,7 +311,7 @@ export default function KnowledgeBase() {
                         <div className="opacity-0 group-hover:opacity-100 flex items-center gap-1 transition-opacity">
                           <button
                             onClick={(e) => openRenameFolderModal(e, folder)}
-                            className="p-1.5 text-forge-textSecondary hover:text-forge-accent hover:bg-indigo-50 rounded transition-colors"
+                            className="p-1.5 text-forge-textSecondary hover:text-forge-accent hover:bg-forge-accent/10 rounded-lg transition-colors"
                             title="Rename Folder"
                           >
                             <Edit2 size={14} />
@@ -332,7 +325,7 @@ export default function KnowledgeBase() {
                                 folderNotes.length,
                               )
                             }
-                            className="p-1.5 text-forge-textSecondary hover:text-red-500 hover:bg-red-50 rounded transition-colors"
+                            className="p-1.5 text-forge-textSecondary hover:text-forge-danger hover:bg-forge-danger/10 rounded-lg transition-colors"
                             title="Delete Folder"
                           >
                             <Trash2 size={14} />
@@ -355,9 +348,9 @@ export default function KnowledgeBase() {
                                   handleDragStart(e, note._id)
                                 }
                                 onClick={() => handleSelectNote(note)}
-                                className={`flex items-center gap-2 p-2 rounded-lg cursor-grab active:cursor-grabbing transition-all duration-200 ${
+                                className={`flex items-center gap-2 p-2 rounded-xl cursor-grab active:cursor-grabbing transition-all duration-200 ${
                                   selectedNote?._id === note._id
-                                    ? "bg-indigo-50 text-forge-accent font-semibold"
+                                    ? "bg-forge-accent/10 text-forge-accent font-semibold"
                                     : "text-forge-textSecondary hover:bg-forge-surfaceHover hover:text-forge-textPrimary font-medium"
                                 }`}
                               >
@@ -385,7 +378,7 @@ export default function KnowledgeBase() {
                     onDrop={(e) => handleDrop(e, "null")}
                     className={`pt-3 border-t border-forge-border transition-colors border-2 ${
                       dragOverFolderId === "null"
-                        ? "bg-indigo-50/50 border-dashed border-forge-accent rounded-xl p-2"
+                        ? "bg-forge-accent/5 border-dashed border-forge-accent rounded-2xl p-2"
                         : "border-transparent"
                     }`}
                   >
@@ -407,9 +400,9 @@ export default function KnowledgeBase() {
                         draggable
                         onDragStart={(e) => handleDragStart(e, note._id)}
                         onClick={() => handleSelectNote(note)}
-                        className={`flex items-center gap-2 p-2 rounded-lg cursor-grab active:cursor-grabbing transition-all duration-200 ${
+                        className={`flex items-center gap-2 p-2 rounded-xl cursor-grab active:cursor-grabbing transition-all duration-200 ${
                           selectedNote?._id === note._id
-                            ? "bg-indigo-50 text-forge-accent font-semibold"
+                            ? "bg-forge-accent/10 text-forge-accent font-semibold"
                             : "text-forge-textSecondary hover:bg-forge-surfaceHover hover:text-forge-textPrimary font-medium"
                         }`}
                       >
@@ -429,7 +422,7 @@ export default function KnowledgeBase() {
           </div>
         </div>
 
-        <div className="col-span-1 md:col-span-2 bg-forge-surface border border-forge-border rounded-2xl p-8 shadow-sm flex flex-col h-[70vh] overflow-y-auto">
+        <div className="col-span-1 md:col-span-2 bg-forge-surface border border-forge-border rounded-xl p-6 shadow-brand flex flex-col h-[70vh] overflow-y-auto">
           {selectedNote ? (
             <div className="animate-in slide-in-from-bottom-2 duration-300 flex flex-col h-full">
               <div className="flex justify-between items-start mb-6 pb-4 border-b border-forge-border">
@@ -441,7 +434,7 @@ export default function KnowledgeBase() {
                       onChange={(e) =>
                         setEditForm({ ...editForm, folderId: e.target.value })
                       }
-                      className="text-xs font-bold text-forge-accent bg-indigo-50 px-3 py-1 rounded-full uppercase tracking-wider focus:outline-none border border-indigo-200 cursor-pointer appearance-none"
+                      className="text-xs font-bold text-forge-accent bg-forge-accent/10 px-3 py-1 rounded-full uppercase tracking-wider focus:outline-none border border-forge-accent/20 cursor-pointer appearance-none"
                     >
                       <option value="null">-- Loose File --</option>
                       {noteFolders.map((folder) => (
@@ -463,7 +456,7 @@ export default function KnowledgeBase() {
                           size={16}
                           className="text-forge-textSecondary"
                         />
-                        <span className="text-xs font-bold text-forge-accent bg-indigo-50 px-3 py-1 rounded-full uppercase tracking-wider">
+                        <span className="text-xs font-bold text-forge-accent bg-forge-accent/10 px-3 py-1 rounded-full uppercase tracking-wider">
                           {getFolderName(selectedNote.folderId)}
                         </span>
                       </>
@@ -474,21 +467,21 @@ export default function KnowledgeBase() {
                   {isEditing ? (
                     <button
                       onClick={handleSave}
-                      className="flex items-center gap-1 text-sm bg-forge-accent text-white px-3 py-1.5 rounded-lg hover:bg-forge-accentHover transition-colors"
+                      className="flex items-center gap-1 text-sm bg-forge-accent text-white px-3 py-1.5 rounded-xl hover:bg-forge-accentHover transition-colors"
                     >
                       <Save size={16} /> Save
                     </button>
                   ) : (
                     <button
                       onClick={() => setIsEditing(true)}
-                      className="flex items-center gap-1 text-sm bg-forge-bg border border-forge-border text-forge-textPrimary px-3 py-1.5 rounded-lg hover:border-forge-accent transition-colors"
+                      className="flex items-center gap-1 text-sm bg-forge-bg border border-forge-border text-forge-textPrimary px-3 py-1.5 rounded-xl hover:border-forge-accent transition-colors"
                     >
                       <Edit2 size={16} /> Edit
                     </button>
                   )}
                   <button
                     onClick={handleDeleteNote}
-                    className="flex items-center gap-1 text-sm bg-red-50 text-red-500 px-3 py-1.5 rounded-lg hover:bg-red-100 transition-colors"
+                    className="flex items-center gap-1 text-sm bg-forge-danger/10 text-forge-danger px-3 py-1.5 rounded-xl hover:bg-forge-danger/20 transition-colors"
                   >
                     <Trash2 size={16} /> Delete
                   </button>
@@ -544,15 +537,15 @@ export default function KnowledgeBase() {
       {/* Shared Modal for Create & Rename */}
       {isFolderModalOpen && (
         <div className="fixed inset-0 bg-forge-textPrimary/20 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in duration-200">
-          <div className="bg-forge-surface w-full max-w-sm rounded-2xl shadow-2xl border border-forge-border p-6 relative animate-in zoom-in-95 duration-200">
+          <div className="bg-forge-surface w-full max-w-sm rounded-xl shadow-brand border border-forge-border p-6 relative animate-in zoom-in-95 duration-200">
             <button
               onClick={() => setIsFolderModalOpen(false)}
-              className="absolute top-4 right-4 text-forge-textSecondary hover:text-red-500 transition-colors"
+              className="absolute top-4 right-4 text-forge-textSecondary hover:text-forge-danger transition-colors"
             >
               <X size={20} />
             </button>
             <div className="flex items-center gap-3 mb-6">
-              <div className="p-2 bg-indigo-50 rounded-lg text-forge-accent">
+              <div className="p-2 bg-forge-accent/10 rounded-xl text-forge-accent">
                 {folderModalMode === "create" ? (
                   <FolderPlus size={24} />
                 ) : (
@@ -575,7 +568,7 @@ export default function KnowledgeBase() {
                 <input
                   type="text"
                   placeholder="e.g., System Design, React..."
-                  className="w-full p-3 bg-forge-bg border border-forge-border rounded-xl text-forge-textPrimary focus:outline-none focus:border-forge-accent transition-colors"
+                  className="w-full p-3 bg-forge-bg border border-forge-border rounded-lg text-forge-textPrimary focus:outline-none focus:border-forge-accent transition-colors"
                   value={newFolderName}
                   onChange={(e) => setNewFolderName(e.target.value)}
                   autoFocus
@@ -585,7 +578,7 @@ export default function KnowledgeBase() {
                 <button
                   type="button"
                   onClick={() => setIsFolderModalOpen(false)}
-                  className="w-1/2 py-2.5 bg-forge-bg border border-forge-border text-forge-textPrimary rounded-xl font-bold hover:border-forge-accent transition-colors"
+                  className="w-1/2 py-2.5 bg-forge-bg border border-forge-border text-forge-textPrimary rounded-lg font-bold hover:border-forge-accent transition-colors"
                 >
                   Cancel
                 </button>
@@ -595,7 +588,7 @@ export default function KnowledgeBase() {
                     !newFolderName.trim() ||
                     newFolderName.trim() === targetFolderName
                   }
-                  className="w-1/2 py-2.5 bg-forge-accent text-white rounded-xl font-bold hover:bg-forge-accentHover transition-colors disabled:opacity-50"
+                  className="w-1/2 py-2.5 bg-forge-accent text-white rounded-lg font-bold hover:bg-forge-accentHover transition-colors disabled:opacity-50"
                 >
                   {folderModalMode === "create" ? "Create" : "Rename"}
                 </button>

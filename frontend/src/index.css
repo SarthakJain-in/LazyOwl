@@ -1,28 +1,46 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700;800;900&display=swap');
 @import "tailwindcss";
 
 :root {
-  /* --- LIGHT MODE PALETTE --- */
-  --bg-color: #F8FAFC; 
+  /* --- LIGHT MODE PALETTE (NeuroBank) --- */
+  --bg-color: #EEF2F8; 
   --surface-color: #FFFFFF; 
-  --surface-hover-color: #F1F5F9;
-  --border-color: #E2E8F0;
-  --text-primary-color: #0F172A; 
-  --text-secondary-color: #64748B;
-  --accent-color: #4F46E5; 
-  --accent-hover-color: #4338CA;
+  --surface-hover-color: #F8F9FB;
+  --border-color: #E9EDF7;
+  --text-primary-color: #1B254B; 
+  --text-secondary-color: #A3AED0;
+  --accent-color: #4361EE; 
+  --accent-hover-color: #344dd9;
+  --success-color: #05CD99;
+  --danger-color: #EE5D50;
+  
+  /* Sleek, professional shadow for light mode cards */
+  --brand-shadow: 0px 4px 16px rgba(112, 144, 176, 0.08), 0px 1px 3px rgba(112, 144, 176, 0.04);
+  
+  --layout-bg-start: #e2e8f0;
+  --layout-bg-end: #f8fafc;
+  --brand-title-color: #1B254B;
 }
 
 .dark {
-  /* --- DARK MODE PALETTE --- */
-  --bg-color: #020617;        /* Deep slate background */
-  --surface-color: #0F172A;   /* Slightly lighter slate for cards */
-  --surface-hover-color: #1E293B;
-  --border-color: #1E293B;    /* Dark borders */
-  --text-primary-color: #F8FAFC; /* White text */
-  --text-secondary-color: #94A3B8; /* Dimmed text */
-  --accent-color: #6366F1;    /* Slightly brighter indigo to pop on dark */
-  --accent-hover-color: #4F46E5;
+  /* --- DARK MODE PALETTE (NeuroBank) --- */
+  --bg-color: #0B0E14;
+  --surface-color: #151821;
+  --surface-hover-color: #1C202D;
+  --border-color: #2C3140;
+  --text-primary-color: #FFFFFF;
+  --text-secondary-color: #8B92A5;
+  --accent-color: #4361EE;
+  --accent-hover-color: #5b75f2;
+  --success-color: #05CD99;
+  --danger-color: #EE5D50;
+  
+  /* Tighter shadow for dark mode */
+  --brand-shadow: 0px 4px 16px rgba(0, 0, 0, 0.4);
+  
+  --layout-bg-start: #06080c;
+  --layout-bg-end: #0e121a;
+  --brand-title-color: #FFFFFF;
 }
 
 @theme {
@@ -35,8 +53,13 @@
   --color-forge-textSecondary: var(--text-secondary-color);
   --color-forge-accent: var(--accent-color); 
   --color-forge-accentHover: var(--accent-hover-color);
+  --color-forge-success: var(--success-color);
+  --color-forge-danger: var(--danger-color);
   
   --font-inter: 'Inter', sans-serif;
+
+  /* NeuroBank Shadows */
+  --shadow-brand: var(--brand-shadow);
 }
 
 body {
@@ -44,11 +67,40 @@ body {
   color: var(--color-forge-textPrimary);
   font-family: var(--font-inter);
   -webkit-font-smoothing: antialiased;
-  /* THE MAGIC: This creates the smooth fade when toggling modes */
-  transition: background-color 0.4s ease, color 0.4s ease;
 }
 
-/* Ensure all cards fade smoothly too */
-* {
-  transition: border-color 0.4s ease, background-color 0.4s ease;
+/* --- VIEW TRANSITIONS (The Magic Ripple) --- */
+
+/* Disable default cross-fade */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+/* Old theme is on top by default, we want the new one to ripple over it */
+::view-transition-old(root) {
+  z-index: 1;
+}
+
+::view-transition-new(root) {
+  z-index: 2; /* Ensure it's above basic background */
+  animation: ripple 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes ripple {
+  from {
+    clip-path: circle(0% at var(--ripple-x, 50%) var(--ripple-y, 50%));
+  }
+  to {
+    clip-path: circle(150% at var(--ripple-x, 50%) var(--ripple-y, 50%));
+  }
+}
+
+/* Ensure smooth transitions for non-theme related changes if needed, 
+   but removed the global '*' selector to prioritize the ripple */
+.transition-colors {
+  transition-property: background-color, border-color, color, fill, stroke, text-decoration-color;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 200ms;
 }

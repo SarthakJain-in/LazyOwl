@@ -15,7 +15,7 @@ export default function TaskList() {
 
   if (activeRoadmaps.length === 0) {
     return (
-      <div className="text-center p-6 border-2 border-dashed border-forge-border rounded-xl bg-forge-bg/50">
+      <div className="text-center p-6 border border-dashed border-forge-border rounded-xl bg-forge-bg/50">
         <p className="text-forge-textSecondary text-sm font-medium">
           No active roadmaps.
         </p>
@@ -65,7 +65,7 @@ export default function TaskList() {
             <div
               key={task._id}
               onClick={() => !isCompleting && setSelectedTask(task)} // Prevent clicking if fading out
-              className={`flex items-start gap-3 p-4 bg-forge-bg border rounded-xl cursor-pointer transition-all duration-700 group ${
+              className={`flex items-start gap-3 p-4 bg-forge-bg border rounded-xl cursor-pointer transition-all duration-700 group hover:shadow-brand ${
                 isCompleting
                   ? "border-green-400 bg-green-50/50 opacity-0 translate-x-8 pointer-events-none" // Fading out animation
                   : "border-forge-border hover:border-forge-accent opacity-100 translate-x-0"

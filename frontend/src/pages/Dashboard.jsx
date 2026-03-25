@@ -60,21 +60,11 @@ export default function Dashboard() {
     .slice(0, 5); // Show top 5
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-500">
-      {/* Header */}
-      <div>
-        <h2 className="text-3xl font-bold text-forge-textPrimary">
-          System Dashboard
-        </h2>
-        <p className="text-forge-textSecondary mt-1">
-          Welcome back. Let's build some momentum.
-        </p>
-      </div>
-
+    <div className="space-y-5 animate-in fade-in duration-500">
       {/* Stats Row */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="bg-forge-surface p-5 rounded-2xl border border-forge-border shadow-sm flex items-center gap-4">
-          <div className="p-3 rounded-xl bg-orange-50">
+        <div className="bg-forge-surface p-5 rounded-xl border border-forge-border shadow-brand flex items-center gap-4">
+          <div className="p-3 rounded-lg bg-orange-500/10">
             <Flame
               className={
                 streak > 0
@@ -94,9 +84,9 @@ export default function Dashboard() {
           </div>
         </div>
 
-        <div className="bg-forge-surface p-5 rounded-2xl border border-forge-border shadow-sm flex items-center gap-4">
-          <div className="p-3 rounded-xl bg-blue-50">
-            <Clock className="text-blue-500" size={24} />
+        <div className="bg-forge-surface p-5 rounded-xl border border-forge-border shadow-brand flex items-center gap-4">
+          <div className="p-3 rounded-lg bg-forge-accent/10">
+            <Clock className="text-forge-accent" size={24} />
           </div>
           <div>
             <p className="text-sm font-semibold text-forge-textSecondary uppercase tracking-wider">
@@ -108,8 +98,8 @@ export default function Dashboard() {
           </div>
         </div>
 
-        <div className="bg-forge-surface p-5 rounded-2xl border border-forge-border shadow-sm flex items-center gap-4">
-          <div className="p-3 rounded-xl bg-indigo-50">
+        <div className="bg-forge-surface p-5 rounded-xl border border-forge-border shadow-brand flex items-center gap-4">
+          <div className="p-3 rounded-lg bg-forge-accent/10">
             <Target className="text-forge-accent" size={24} />
           </div>
           <div>
@@ -124,9 +114,9 @@ export default function Dashboard() {
       </div>
 
       {/* Content Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 items-start">
         {/* Left Column: Tasks */}
-        <div className="bg-forge-surface p-6 rounded-2xl border border-forge-border shadow-sm">
+        <div className="bg-forge-surface p-6 rounded-xl border border-forge-border shadow-brand">
           <h3 className="text-lg font-bold text-forge-textPrimary mb-4">
             Up Next
           </h3>
@@ -135,9 +125,9 @@ export default function Dashboard() {
         </div>
 
         {/* Right Column*/}
-        <div className="space-y-8">
+        <div className="space-y-5">
           {/* Active Journeys */}
-          <div className="bg-forge-surface p-6 rounded-2xl border border-forge-border shadow-sm">
+          <div className="bg-forge-surface p-6 rounded-xl border border-forge-border shadow-brand">
             <h3 className="text-lg font-bold text-forge-textPrimary mb-4">
               Active Journeys
             </h3>
@@ -164,18 +154,18 @@ export default function Dashboard() {
                   return (
                     <div
                       key={activeRoadmap._id}
-                      className="flex flex-col justify-between p-5 bg-forge-bg border border-forge-border rounded-xl shadow-sm"
+                      className="flex flex-col justify-between p-4 bg-forge-bg border border-forge-border rounded-lg shadow-sm"
                     >
                       <div>
                         <div className="flex items-start gap-3 mb-4">
-                          <div className="p-2.5 bg-indigo-50 rounded-lg text-forge-accent shrink-0">
+                          <div className="p-2 bg-forge-accent/10 rounded-lg text-forge-accent shrink-0">
                             <Map size={24} />
                           </div>
                           <div>
                             <h4 className="text-lg font-bold text-forge-textPrimary leading-tight">
                               {activeRoadmap.title}
                             </h4>
-                            <span className="text-[10px] font-bold text-forge-accent bg-indigo-50 px-2 py-0.5 rounded uppercase tracking-wider mt-1.5 inline-block">
+                            <span className="text-[10px] font-bold text-forge-accent bg-forge-accent/5 px-2 py-0.5 rounded uppercase tracking-wider mt-1.5 inline-block border border-forge-accent/20">
                               {activeRoadmap.category || "General"}
                             </span>
                           </div>
@@ -201,7 +191,7 @@ export default function Dashboard() {
 
                       <Link
                         to={`/roadmaps/${activeRoadmap._id}`}
-                        className="mt-5 flex items-center justify-center gap-2 w-full py-2 bg-forge-surface border border-forge-border rounded-lg text-sm text-forge-textPrimary font-semibold hover:border-forge-accent hover:text-forge-accent transition-colors"
+                        className="mt-4 flex items-center justify-center gap-2 w-full py-2 bg-forge-surface border border-forge-border rounded-lg text-sm text-forge-textPrimary font-semibold hover:border-forge-accent hover:text-forge-accent hover:bg-forge-accent/5 transition-colors"
                       >
                         View Full Roadmap <ArrowRight size={16} />
                       </Link>
@@ -210,8 +200,8 @@ export default function Dashboard() {
                 })}
               </div>
             ) : (
-              <div className="flex-1 flex flex-col justify-center items-center text-center border-2 border-dashed border-forge-border rounded-xl p-6 bg-forge-bg/50">
-                <div className="p-4 bg-forge-surface rounded-full mb-3 shadow-sm border border-forge-border">
+              <div className="flex-1 flex flex-col justify-center items-center text-center border border-dashed border-forge-border rounded-xl p-6 bg-forge-bg/50">
+                <div className="p-3 bg-forge-surface rounded-full mb-3 shadow-sm border border-forge-border">
                   <Map className="text-forge-textSecondary" size={32} />
                 </div>
                 <h3 className="font-semibold text-forge-textPrimary">
@@ -223,7 +213,7 @@ export default function Dashboard() {
                 </p>
                 <Link
                   to="/roadmaps"
-                  className="text-sm font-semibold text-forge-accent bg-indigo-50 px-4 py-2 rounded-lg hover:bg-indigo-100 transition-colors"
+                  className="text-sm font-semibold text-forge-accent bg-forge-accent/10 px-4 py-2 rounded-xl hover:bg-forge-accent/20 transition-colors"
                 >
                   Go to Roadmaps
                 </Link>
@@ -233,25 +223,25 @@ export default function Dashboard() {
 
           {/* Recently Completed Section */}
           {recentlyCompleted.length > 0 && (
-            <div className="bg-forge-surface p-6 rounded-2xl border border-forge-border shadow-sm animate-in slide-in-from-bottom-4 duration-500">
+            <div className="bg-forge-surface p-6 rounded-xl border border-forge-border shadow-brand animate-in slide-in-from-bottom-4 duration-500">
               <h3 className="text-lg font-bold text-forge-textPrimary mb-4 flex items-center gap-2">
-                <CheckCircle2 size={20} className="text-green-500" /> Today's
+                <CheckCircle2 size={20} className="text-forge-success" /> Today's
                 Wins
               </h3>
               <div className="space-y-3">
                 {recentlyCompleted.map((task) => (
                   <div
                     key={task._id}
-                    className="flex items-center gap-3 p-3 bg-green-50/30 border border-green-100 rounded-xl opacity-80"
+                    className="flex items-center gap-3 p-2.5 bg-forge-success/5 border border-forge-success/20 rounded-lg opacity-90"
                   >
-                    <div className="bg-green-100 text-green-600 p-1.5 rounded-full">
+                    <div className="bg-forge-success/20 text-forge-success p-1.5 rounded-full">
                       <Check size={14} strokeWidth={3} />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-semibold text-forge-textPrimary truncate line-through decoration-green-500/30">
+                      <p className="text-sm font-semibold text-forge-textPrimary truncate line-through decoration-forge-success/30">
                         {task.title}
                       </p>
-                      <p className="text-[10px] font-bold text-green-600 uppercase tracking-tighter">
+                      <p className="text-[10px] font-bold text-forge-success uppercase tracking-tighter">
                         Completed{" "}
                         {new Date(task.completedAt).toLocaleTimeString([], {
                           hour: "2-digit",

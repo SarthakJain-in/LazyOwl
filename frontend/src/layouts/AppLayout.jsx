@@ -25,20 +25,22 @@ export default function AppLayout() {
       {navItems.map((item) => {
         const isActive = location.pathname === item.path;
         const activeClass = isActive
-          ? "text-forge-accent bg-indigo-50"
-          : "text-forge-textSecondary hover:bg-forge-surfaceHover";
+          ? "text-forge-textPrimary bg-forge-surface font-bold shadow-sm border border-forge-border/50"
+          : "text-forge-textSecondary hover:text-forge-textPrimary hover:bg-forge-bg/50 border border-transparent";
 
         return (
           <Link
             key={item.name}
             to={item.path}
-            className={`flex items-center p-3 rounded-xl transition-colors ${
-              isMobile ? "flex-col justify-center flex-1" : "gap-4 mb-2"
+            className={`flex items-center p-3 rounded-xl transition-all ${
+              isMobile ? "flex-col justify-center flex-1" : "gap-4 mb-1"
             } ${activeClass}`}
           >
             <item.icon
-              size={isMobile ? 20 : 22}
-              className={isActive ? "text-forge-accent" : ""}
+              size={isMobile ? 20 : 20}
+              className={
+                isActive ? "text-forge-textPrimary" : "text-forge-textSecondary"
+              }
             />
             <span
               className={
@@ -54,49 +56,76 @@ export default function AppLayout() {
   );
 
   return (
-    <div className="flex h-screen overflow-hidden bg-forge-bg">
+    <div
+      className="flex h-screen overflow-hidden p-0 md:p-4 md:gap-4 transition-colors duration-500"
+      style={{
+        background:
+          "linear-gradient(to bottom right, var(--layout-bg-start), var(--layout-bg-end))",
+      }}
+    >
       {/* Desktop Sidebar */}
-      <aside className="hidden md:flex flex-col w-64 bg-forge-surface border-r border-forge-border p-4">
-        <div className="mb-10 mt-4 px-3 flex items-center justify-between">
-          <h1 className="text-2xl font-bold text-forge-textPrimary tracking-tight">
+      <aside className="hidden md:flex flex-col w-72 bg-transparent gap-5 shrink-0">
+        <div className="px-3 pt-2 pb-1 flex items-center justify-between">
+          <span
+            className="font-black text-3xl tracking-tighter transition-colors duration-500"
+            style={{
+              color: "var(--brand-title-color)",
+              fontFamily: "'Outfit', sans-serif",
+            }}
+          >
             LazyOwl.
-          </h1>
+          </span>
           <ThemeToggle />
         </div>
-        <nav className="flex-1">
-          <NavLinks isMobile={false} />
-        </nav>
 
-        {/* User Info & Logout */}
-        <div className="border-t border-forge-border pt-4 mt-4">
-          {user && (
-            <div className="flex items-center gap-3 px-3 mb-3">
-              <div className="w-8 h-8 rounded-full bg-forge-accent flex items-center justify-center text-white text-sm font-bold">
-                {user.name?.charAt(0).toUpperCase()}
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-semibold text-forge-textPrimary truncate">
-                  {user.name}
-                </p>
-                <p className="text-xs text-forge-textSecondary truncate">
-                  {user.email}
-                </p>
+        {/* Greeting Component */}
+        {user && (
+          <div className="bg-forge-bg rounded-2xl p-6 border border-forge-border shadow-brand">
+            <div className="text-[11px] text-forge-textSecondary font-bold uppercase tracking-widest mb-3 mt-1">
+              {new Date().toLocaleDateString("en-US", {
+                weekday: "long",
+                month: "long",
+                day: "numeric",
+              })}
+            </div>
+            <h2 className="text-[28px] font-bold text-forge-textPrimary leading-[1.15] tracking-tight">
+              Welcome back,
+              <br />
+              {user.name?.split(" ")[0]}!
+            </h2>
+          </div>
+        )}
+
+        {/* Navigation Links Component */}
+        <div className="bg-forge-bg rounded-2xl p-3 border border-forge-border shadow-brand flex-1 overflow-y-auto">
+          <nav className="flex flex-col gap-1">
+            <NavLinks isMobile={false} />
+          </nav>
+        </div>
+
+        {/* Logout User Component */}
+        <button
+          onClick={handleLogout}
+          className="relative w-full rounded-2xl p-4 overflow-hidden border border-forge-border/50 shadow-brand group text-left hover:border-forge-accent/40 transition-all shrink-0 bg-forge-bg"
+        >
+          <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-transparent dark:from-blue-600/20 transition-opacity group-hover:opacity-80"></div>
+          <div className="relative flex items-center gap-3 z-10 text-forge-textPrimary">
+            <div className="p-2 bg-forge-bg rounded-lg shadow-sm border border-forge-border/50 group-hover:scale-110 transition-transform">
+              <LogOut size={16} className="text-forge-textPrimary" />
+            </div>
+            <div className="leading-tight">
+              <div className="font-bold text-sm">Logout Session</div>
+              <div className="text-[11px] text-forge-textSecondary mt-0.5">
+                See you next time
               </div>
             </div>
-          )}
-          <button
-            onClick={handleLogout}
-            className="flex items-center gap-3 w-full p-3 rounded-xl text-forge-textSecondary hover:bg-red-500/10 hover:text-red-400 transition-colors"
-          >
-            <LogOut size={20} />
-            <span className="font-medium">Logout</span>
-          </button>
-        </div>
+          </div>
+        </button>
       </aside>
 
       {/* Main Content Area */}
-      <main className="flex-1 overflow-y-auto pb-20 md:pb-0">
-        <div className="max-w-5xl mx-auto p-6 md:p-10">
+      <main className="flex-1 bg-forge-bg md:border border-forge-border md:rounded-xl md:shadow-brand overflow-y-auto pb-20 md:pb-0">
+        <div className="w-full h-full p-4 md:p-8">
           <Outlet />
         </div>
       </main>

@@ -42,24 +42,14 @@ export default function Focus() {
   };
 
   return (
-    <div className="h-full flex flex-col items-center justify-center animate-in fade-in duration-500 max-w-2xl mx-auto space-y-12">
-      {/* Header */}
-      <div className="text-center space-y-2">
-        <h2 className="text-3xl font-bold text-forge-textPrimary">
-          Focus Portal
-        </h2>
-        <p className="text-forge-textSecondary">
-          Eliminate distractions. Build momentum.
-        </p>
-      </div>
-
+    <div className="h-full flex flex-col items-center justify-center animate-in fade-in duration-500 w-full space-y-8">
       {/* Mode Selectors */}
-      <div className="flex bg-forge-surface p-1.5 rounded-2xl border border-forge-border shadow-sm">
+      <div className="flex bg-forge-surface p-1.5 rounded-xl border border-forge-border shadow-brand">
         <button
           onClick={() => switchMode("work")}
-          className={`flex items-center gap-2 px-6 py-3 rounded-xl font-semibold transition-all ${
+          className={`flex items-center gap-2 px-6 py-3 rounded-lg font-semibold transition-all ${
             mode === "work"
-              ? "bg-indigo-50 text-forge-accent shadow-sm"
+              ? "bg-forge-accent/10 text-forge-accent shadow-brand"
               : "text-forge-textSecondary hover:text-forge-textPrimary"
           }`}
         >
@@ -67,9 +57,9 @@ export default function Focus() {
         </button>
         <button
           onClick={() => switchMode("break")}
-          className={`flex items-center gap-2 px-6 py-3 rounded-xl font-semibold transition-all ${
+          className={`flex items-center gap-2 px-6 py-3 rounded-lg font-semibold transition-all ${
             mode === "break"
-              ? "bg-green-50 text-green-600 shadow-sm"
+              ? "bg-forge-success/10 text-forge-success shadow-brand"
               : "text-forge-textSecondary hover:text-forge-textPrimary"
           }`}
         >
@@ -82,11 +72,11 @@ export default function Focus() {
         {/* Decorative background glow */}
         <div
           className={`absolute inset-0 rounded-full blur-3xl opacity-20 ${
-            mode === "work" ? "bg-forge-accent" : "bg-green-500"
+            mode === "work" ? "bg-forge-accent" : "bg-forge-success"
           }`}
         ></div>
 
-        <div className="relative bg-forge-surface w-72 h-72 rounded-full flex flex-col items-center justify-center border-8 border-forge-bg shadow-lg z-10">
+        <div className="relative bg-forge-surface w-72 h-72 rounded-full flex flex-col items-center justify-center border-8 border-forge-bg shadow-brand z-10">
           <span className="text-7xl font-bold tracking-tighter text-forge-textPrimary">
             {formatTime(timeLeft)}
           </span>
@@ -100,10 +90,10 @@ export default function Focus() {
       <div className="flex items-center gap-6">
         <button
           onClick={toggleTimer}
-          className={`flex items-center justify-center w-20 h-20 rounded-full shadow-md text-white transition-transform hover:scale-105 active:scale-95 ${
+          className={`flex items-center justify-center w-20 h-20 rounded-full shadow-brand text-white transition-transform hover:scale-105 active:scale-95 ${
             mode === "work"
               ? "bg-forge-accent hover:bg-forge-accentHover"
-              : "bg-green-500 hover:bg-green-600"
+              : "bg-forge-success hover:bg-forge-success/80"
           }`}
         >
           {isActive ? <Pause size={32} /> : <Play size={32} className="ml-1" />}
@@ -111,7 +101,7 @@ export default function Focus() {
 
         <button
           onClick={resetTimer}
-          className="flex items-center justify-center w-14 h-14 rounded-full bg-forge-surface border border-forge-border text-forge-textSecondary hover:text-forge-textPrimary hover:bg-forge-surfaceHover transition-all shadow-sm"
+          className="flex items-center justify-center w-14 h-14 rounded-full bg-forge-surface border border-forge-border text-forge-textSecondary hover:text-forge-textPrimary hover:bg-forge-surfaceHover transition-all shadow-brand"
         >
           <RotateCcw size={24} />
         </button>

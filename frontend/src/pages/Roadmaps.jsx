@@ -138,35 +138,27 @@ export default function Roadmaps() {
   }
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-500 relative">
-      {/* Page Header */}
-      <div className="flex justify-between items-end">
-        <div>
-          <h2 className="text-3xl font-bold text-forge-textPrimary">
-            Learning Paths
-          </h2>
-          <p className="text-forge-textSecondary mt-1">
-            Map out your journey, module by module.
-          </p>
-        </div>
+    <div className="space-y-5 animate-in fade-in duration-500 relative">
+      {/* Page Header Actions */}
+      <div className="flex justify-end items-end">
         <div className="flex gap-3">
           <Link
             to="/roadmaps/new"
-            className="flex items-center gap-2 bg-forge-surface border border-forge-border text-forge-textPrimary px-4 py-2 rounded-lg font-semibold hover:border-forge-accent transition-colors shadow-sm"
+            className="flex items-center gap-2 bg-forge-surface border border-forge-border text-forge-textPrimary px-4 py-2 rounded-lg font-semibold hover:border-forge-accent transition-colors shadow-brand"
           >
             <Plus size={18} />
             <span className="hidden sm:inline">Create Path</span>
           </Link>
           <button
             onClick={() => setIsImportModalOpen(true)}
-            className="flex items-center gap-2 bg-forge-surface border border-forge-border text-forge-textPrimary px-4 py-2 rounded-lg font-semibold hover:border-emerald-500 hover:text-emerald-500 transition-colors shadow-sm"
+            className="flex items-center gap-2 bg-forge-surface border border-forge-border text-forge-textPrimary px-4 py-2 rounded-lg font-semibold hover:border-forge-success hover:text-forge-success transition-colors shadow-brand"
           >
             <FileUp size={18} />
             <span className="hidden sm:inline">Import PDF</span>
           </button>
           <button
             onClick={() => setIsModalOpen(true)}
-            className="flex items-center gap-2 bg-forge-accent text-white px-4 py-2 rounded-lg font-semibold hover:bg-forge-accentHover transition-colors shadow-sm"
+            className="flex items-center gap-2 bg-forge-accent text-white px-4 py-2 rounded-lg font-semibold hover:bg-forge-accentHover transition-colors shadow-brand"
           >
             <Sparkles size={18} />
             <span className="hidden sm:inline">AI Generate Pathway</span>
@@ -176,7 +168,7 @@ export default function Roadmaps() {
 
       {/* Roadmaps List */}
       {roadmaps.length === 0 ? (
-        <div className="bg-forge-surface p-10 rounded-2xl border border-forge-border text-center">
+        <div className="bg-forge-surface p-8 rounded-xl border border-forge-border shadow-brand text-center">
           <p className="text-forge-textSecondary">
             No learning paths found. Let AI generate one for you!
           </p>
@@ -192,10 +184,10 @@ export default function Roadmaps() {
                   e.stopPropagation();
                   toggleRoadmapActive(roadmap._id);
                 }}
-                className={`absolute top-5 right-5 p-2 rounded-lg z-10 transition-all duration-200 ${
+                className={`absolute top-4 right-4 p-2 rounded-lg z-10 transition-all duration-200 ${
                   roadmap.isActive
-                    ? "bg-forge-accent text-white shadow-md opacity-100"
-                    : "bg-forge-surface border border-forge-border text-forge-textSecondary hover:text-forge-accent opacity-0 group-hover:opacity-100 shadow-sm"
+                    ? "bg-forge-accent text-white shadow-brand opacity-100"
+                    : "bg-forge-surface border border-forge-border text-forge-textSecondary hover:text-forge-accent opacity-0 group-hover:opacity-100 shadow-brand"
                 }`}
                 title={
                   roadmap.isActive ? "Unpin from Dashboard" : "Pin to Dashboard"
@@ -206,12 +198,12 @@ export default function Roadmaps() {
 
               <Link
                 to={`/roadmaps/${roadmap._id}`}
-                className="block bg-forge-surface border border-forge-border rounded-2xl shadow-sm overflow-hidden transition-all hover:border-forge-accent hover:shadow-md hover:-translate-y-0.5"
+                className="block bg-forge-surface border border-forge-border rounded-xl shadow-sm overflow-hidden transition-all hover:border-forge-accent hover:shadow-brand hover:-translate-y-0.5"
               >
                 <div className="p-6 border-b border-forge-border bg-forge-bg/50">
                   <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-3">
-                      <div className="p-2 bg-indigo-100 rounded-lg text-forge-accent">
+                      <div className="p-2 bg-forge-accent/10 rounded-lg text-forge-accent">
                         <Map size={24} />
                       </div>
                       <h3 className="text-xl font-bold text-forge-textPrimary">
@@ -219,7 +211,7 @@ export default function Roadmaps() {
                       </h3>
                     </div>
                     {/* Added mr-10 so the text doesn't hide behind the absolute pin button */}
-                    <span className="text-xs font-bold text-forge-accent bg-indigo-50 px-3 py-1 rounded-full uppercase tracking-wider mr-10">
+                    <span className="text-xs font-bold text-forge-accent bg-forge-accent/10 px-3 py-1 rounded-full uppercase tracking-wider mr-10">
                       {roadmap.category || "General"}
                     </span>
                   </div>
@@ -240,16 +232,16 @@ export default function Roadmaps() {
       {/* AI Generation Modal Overlay */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-forge-textPrimary/20 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in duration-200">
-          <div className="bg-forge-surface w-full max-w-md rounded-2xl shadow-2xl border border-forge-border p-6 relative animate-in zoom-in-95 duration-200">
+          <div className="bg-forge-surface w-full max-w-md rounded-xl shadow-brand border border-forge-border p-6 relative animate-in zoom-in-95 duration-200">
             <button
               onClick={() => setIsModalOpen(false)}
-              className="absolute top-4 right-4 text-forge-textSecondary hover:text-red-500 transition-colors"
+              className="absolute top-4 right-4 text-forge-textSecondary hover:text-forge-danger transition-colors"
             >
               <X size={20} />
             </button>
 
             <div className="flex items-center gap-3 mb-6">
-              <div className="p-2 bg-indigo-50 rounded-lg text-forge-accent">
+              <div className="p-2 bg-forge-accent/10 rounded-lg text-forge-accent">
                 <Sparkles size={24} />
               </div>
               <div>
@@ -270,7 +262,7 @@ export default function Roadmaps() {
                 <input
                   type="text"
                   placeholder="e.g., GraphQL, Three.js, System Design..."
-                  className="w-full p-3 bg-forge-bg border border-forge-border rounded-xl text-forge-textPrimary focus:outline-none focus:border-forge-accent transition-colors"
+                  className="w-full p-3 bg-forge-bg border border-forge-border rounded-lg text-forge-textPrimary focus:outline-none focus:border-forge-accent transition-colors"
                   value={topic}
                   onChange={(e) => setTopic(e.target.value)}
                   disabled={isGenerating}
@@ -285,7 +277,7 @@ export default function Roadmaps() {
                 <input
                   type="text"
                   placeholder="e.g., Frontend, DevOps, Math..."
-                  className="w-full p-3 bg-forge-bg border border-forge-border rounded-xl text-forge-textPrimary focus:outline-none focus:border-forge-accent transition-colors"
+                  className="w-full p-3 bg-forge-bg border border-forge-border rounded-lg text-forge-textPrimary focus:outline-none focus:border-forge-accent transition-colors"
                   value={category}
                   onChange={(e) => setCategory(e.target.value)}
                   disabled={isGenerating}
@@ -295,7 +287,7 @@ export default function Roadmaps() {
               <button
                 type="submit"
                 disabled={isGenerating || !topic}
-                className="w-full py-3 mt-2 bg-forge-accent text-white rounded-xl font-bold hover:bg-forge-accentHover transition-colors flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
+                className="w-full py-3 mt-2 bg-forge-accent text-white rounded-lg font-bold hover:bg-forge-accentHover transition-colors flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed shadow-sm"
               >
                 {isGenerating ? (
                   <>
@@ -314,18 +306,18 @@ export default function Roadmaps() {
       {/* PDF Import Modal Overlay */}
       {isImportModalOpen && (
         <div className="fixed inset-0 bg-forge-textPrimary/20 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in duration-200">
-          <div className="bg-forge-surface w-full max-w-md rounded-2xl shadow-2xl border border-forge-border p-6 relative animate-in zoom-in-95 duration-200">
+          <div className="bg-forge-surface w-full max-w-md rounded-xl shadow-brand border border-forge-border p-6 relative animate-in zoom-in-95 duration-200">
             <button
               onClick={closeImportModal}
               disabled={isImporting}
-              className="absolute top-4 right-4 text-forge-textSecondary hover:text-red-500 transition-colors disabled:opacity-50"
+              className="absolute top-4 right-4 text-forge-textSecondary hover:text-forge-danger transition-colors disabled:opacity-50"
             >
               <X size={20} />
             </button>
 
             {/* Header */}
             <div className="flex items-center gap-3 mb-6">
-              <div className="p-2 bg-emerald-50 dark:bg-emerald-900/30 rounded-lg text-emerald-600">
+              <div className="p-2 bg-forge-success/10 rounded-lg text-forge-success">
                 <FileUp size={24} />
               </div>
               <div>
@@ -345,12 +337,12 @@ export default function Roadmaps() {
                 onDragLeave={handleDragLeave}
                 onDrop={handleDrop}
                 onClick={() => !isImporting && fileInputRef.current?.click()}
-                className={`relative border-2 border-dashed rounded-xl p-6 text-center cursor-pointer transition-all duration-200 ${
+                className={`relative border-2 border-dashed rounded-lg p-6 text-center cursor-pointer transition-all duration-200 ${
                   isDragging
-                    ? "border-emerald-500 bg-emerald-50/10"
+                    ? "border-forge-success bg-forge-success/10"
                     : selectedFile
-                    ? "border-emerald-500 bg-emerald-50/5"
-                    : "border-forge-border hover:border-emerald-500/50 hover:bg-forge-bg/50"
+                    ? "border-forge-success bg-forge-success/5"
+                    : "border-forge-border hover:border-forge-success/50 hover:bg-forge-bg/50"
                 } ${isImporting ? "pointer-events-none opacity-60" : ""}`}
               >
                 <input
@@ -364,8 +356,8 @@ export default function Roadmaps() {
 
                 {selectedFile ? (
                   <div className="flex items-center justify-center gap-3">
-                    <div className="p-2 bg-emerald-100 dark:bg-emerald-900/40 rounded-lg">
-                      <FileText size={20} className="text-emerald-600" />
+                    <div className="p-2 bg-forge-success/20 rounded-lg">
+                      <FileText size={20} className="text-forge-success" />
                     </div>
                     <div className="text-left">
                       <p className="text-sm font-semibold text-forge-textPrimary truncate max-w-[200px]">
@@ -400,7 +392,7 @@ export default function Roadmaps() {
                 <input
                   type="text"
                   placeholder="e.g., Frontend, DevOps, Math..."
-                  className="w-full p-3 bg-forge-bg border border-forge-border rounded-xl text-forge-textPrimary focus:outline-none focus:border-emerald-500 transition-colors"
+                  className="w-full p-3 bg-forge-bg border border-forge-border rounded-lg text-forge-textPrimary focus:outline-none focus:border-forge-accent transition-colors"
                   value={importCategory}
                   onChange={(e) => setImportCategory(e.target.value)}
                   disabled={isImporting}
@@ -411,7 +403,7 @@ export default function Roadmaps() {
               <button
                 type="button"
                 onClick={handleDownloadSample}
-                className="w-full flex items-center justify-center gap-2 py-2 text-sm text-forge-textSecondary hover:text-emerald-500 transition-colors"
+                className="w-full flex items-center justify-center gap-2 py-2 text-sm text-forge-textSecondary hover:text-forge-accent transition-colors"
               >
                 <Download size={14} />
                 Download sample PDF template
@@ -419,7 +411,7 @@ export default function Roadmaps() {
 
               {/* Error Message */}
               {importError && (
-                <div className="flex items-start gap-2 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl text-red-600 dark:text-red-400 text-sm">
+                <div className="flex items-start gap-2 p-3 bg-forge-danger/10 border border-forge-danger/20 rounded-xl text-forge-danger text-sm">
                   <AlertCircle size={16} className="mt-0.5 shrink-0" />
                   <span>{importError}</span>
                 </div>
@@ -427,7 +419,7 @@ export default function Roadmaps() {
 
               {/* Success Message */}
               {importSuccess && (
-                <div className="flex items-center gap-2 p-3 bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800 rounded-xl text-emerald-600 dark:text-emerald-400 text-sm">
+                <div className="flex items-center gap-2 p-3 bg-forge-success/10 border border-forge-success/20 rounded-xl text-forge-success text-sm">
                   <CheckCircle2 size={16} className="shrink-0" />
                   <span>{importSuccess}</span>
                 </div>
@@ -437,7 +429,7 @@ export default function Roadmaps() {
               <button
                 type="submit"
                 disabled={isImporting || !selectedFile}
-                className="w-full py-3 mt-2 bg-emerald-600 text-white rounded-xl font-bold hover:bg-emerald-700 transition-colors flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
+                className="w-full py-3 mt-2 bg-forge-accent text-white rounded-lg font-bold hover:bg-forge-accentHover transition-colors flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed shadow-sm"
               >
                 {isImporting ? (
                   <>

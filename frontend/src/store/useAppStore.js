@@ -26,16 +26,29 @@ export const useAppStore = create((set, get) => ({
   user: authService.getCurrentUser(),
 
   // --- THEME ACTIONS ---
-  toggleTheme: () => {
-    const newTheme = !get().isDarkMode;
-    set({ isDarkMode: newTheme });
+  toggleTheme: (x, y) => {
+    const update = () => {
+      const newTheme = !get().isDarkMode;
+      set({ isDarkMode: newTheme });
 
-    if (newTheme) {
-      document.documentElement.classList.add("dark");
-      localStorage.setItem("theme", "dark");
+      if (newTheme) {
+        document.documentElement.classList.add("dark");
+        localStorage.setItem("theme", "dark");
+      } else {
+        document.documentElement.classList.remove("dark");
+        localStorage.setItem("theme", "light");
+      }
+    };
+
+    if (x !== undefined && y !== undefined) {
+      document.documentElement.style.setProperty("--ripple-x", `${x}px`);
+      document.documentElement.style.setProperty("--ripple-y", `${y}px`);
+    }
+
+    if (document.startViewTransition) {
+      document.startViewTransition(update);
     } else {
-      document.documentElement.classList.remove("dark");
-      localStorage.setItem("theme", "light");
+      update();
     }
   },
 

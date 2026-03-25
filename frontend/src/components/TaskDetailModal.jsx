@@ -11,7 +11,7 @@ export default function TaskDetailModal({
 
   return (
     <div className="fixed inset-0 bg-forge-textPrimary/20 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in duration-200">
-      <div className="bg-forge-surface w-full max-w-md rounded-2xl shadow-2xl border border-forge-border p-6 relative animate-in zoom-in-95 duration-200">
+      <div className="bg-forge-surface w-full max-w-md rounded-xl shadow-brand border border-forge-border p-6 relative animate-in zoom-in-95 duration-200">
         <button
           onClick={onClose}
           className="absolute top-4 right-4 text-forge-textSecondary hover:text-red-500 transition-colors"
@@ -64,7 +64,7 @@ export default function TaskDetailModal({
                 onUndo(task._id);
                 onClose();
               }}
-              className="w-full py-3.5 bg-forge-surface border border-forge-border text-forge-textSecondary hover:text-forge-textPrimary hover:bg-forge-bg rounded-xl font-bold transition-colors flex items-center justify-center gap-2 group"
+              className="w-full py-3.5 bg-forge-surface border border-forge-border text-forge-textSecondary hover:text-forge-textPrimary hover:bg-forge-bg rounded-lg font-bold transition-colors flex items-center justify-center gap-2 group"
             >
               <CheckCircle2
                 size={20}
@@ -80,7 +80,7 @@ export default function TaskDetailModal({
                 onComplete(task._id);
                 onClose();
               }}
-              className="w-full py-3.5 bg-forge-accent text-white rounded-xl font-bold hover:bg-forge-accentHover transition-colors flex items-center justify-center gap-2 shadow-sm"
+              className="w-full py-3.5 bg-forge-accent text-white rounded-lg font-bold hover:bg-forge-accentHover transition-colors flex items-center justify-center gap-2 shadow-sm"
             >
               <Check size={20} />
               Mark as Complete

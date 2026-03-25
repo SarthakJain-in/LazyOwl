@@ -342,7 +342,7 @@ export default function RoadmapDetail() {
       : 0;
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8 animate-in fade-in duration-500 pb-12">
+    <div className="w-full space-y-5 animate-in fade-in duration-500 pb-12">
       {/* Header Actions */}
       <div className="flex justify-between items-center mb-6">
         <Link
@@ -356,13 +356,13 @@ export default function RoadmapDetail() {
             <>
               <button
                 onClick={() => navigate("/roadmaps")}
-                className="px-5 py-2 rounded-lg font-bold text-forge-textSecondary hover:text-forge-textPrimary transition-colors"
+                className="px-5 py-2 rounded-xl font-bold text-forge-textSecondary hover:text-forge-textPrimary transition-colors"
               >
                 Cancel
               </button>
               <button
                 onClick={handleCreateSubmit}
-                className="bg-forge-accent text-white px-6 py-2 rounded-lg font-bold hover:bg-forge-accentHover transition-colors shadow-lg shadow-indigo-500/20"
+                className="bg-forge-accent text-white px-6 py-2 rounded-xl font-bold hover:bg-forge-accentHover transition-colors shadow-brand"
               >
                 Create Roadmap
               </button>
@@ -373,7 +373,7 @@ export default function RoadmapDetail() {
                 <>
                   <button
                     onClick={handleDeleteRoadmap}
-                    className="flex items-center gap-2 px-5 py-2 rounded-lg font-bold text-red-500 hover:text-red-600 hover:bg-red-50 transition-colors"
+                    className="flex items-center gap-2 px-5 py-2 rounded-xl font-bold text-forge-danger hover:text-forge-danger/80 hover:bg-forge-danger/10 transition-colors"
                   >
                     <Trash2 size={16} /> Delete Roadmap
                   </button>
@@ -382,7 +382,7 @@ export default function RoadmapDetail() {
                       setIsEditMode(false);
                       // Reload data if needed, but since it's autosave it's fine just exiting edit mode.
                     }}
-                    className="px-5 py-2 rounded-lg font-bold text-forge-textSecondary hover:text-forge-textPrimary transition-colors"
+                    className="px-5 py-2 rounded-xl font-bold text-forge-textSecondary hover:text-forge-textPrimary transition-colors"
                   >
                     Cancel
                   </button>
@@ -390,7 +390,7 @@ export default function RoadmapDetail() {
               )}
               <button
                 onClick={() => setIsEditMode(!isEditMode)}
-                className={`flex items-center gap-2 px-5 py-2 rounded-lg font-bold transition-colors ${
+                className={`flex items-center gap-2 px-5 py-2 rounded-xl font-bold transition-colors ${
                   isEditMode
                     ? "bg-forge-bg text-forge-textPrimary border border-forge-border"
                     : "bg-forge-surface border border-forge-border text-forge-textSecondary hover:text-forge-accent"
@@ -408,7 +408,7 @@ export default function RoadmapDetail() {
       <div className="flex items-start justify-between gap-4">
         <div className="flex-1">
           <div className="flex items-center gap-3 mb-2">
-            <div className="p-2 bg-indigo-50 rounded-lg text-forge-accent shrink-0">
+            <div className="p-2 bg-forge-accent/10 rounded-xl text-forge-accent shrink-0">
               <Map size={24} />
             </div>
             <div className="flex-1">
@@ -426,14 +426,14 @@ export default function RoadmapDetail() {
               text={activeRoadmap?.category}
               isEditMode={isEditMode}
               onSave={(val) => handleUpdateRoadmap("category", val)}
-              className="text-xs font-bold text-forge-accent bg-indigo-50 px-3 py-1 rounded-full uppercase tracking-wider min-w-[120px]"
+              className="text-xs font-bold text-forge-accent bg-forge-accent/10 px-3 py-1 rounded-full uppercase tracking-wider min-w-[120px]"
               placeholder="CATEGORY"
             />
           </div>
         </div>
 
         {!isCreateMode && !isEditMode && (
-          <div className="text-right bg-forge-surface border border-forge-border p-4 rounded-xl shadow-sm min-w-[150px] shrink-0">
+          <div className="text-right bg-forge-surface border border-forge-border p-4 rounded-2xl shadow-brand min-w-[150px] shrink-0">
             <p className="text-xs font-bold text-forge-textSecondary uppercase tracking-wider mb-1 flex items-center justify-end gap-1.5">
               <Target size={14} /> Progress
             </p>
@@ -458,7 +458,7 @@ export default function RoadmapDetail() {
         <Droppable droppableId="all-modules" type="module" isDropDisabled={!isEditMode}>
           {(provided) => (
             <div
-              className={`space-y-10 ${isEditMode ? "mt-4" : "mt-12"}`}
+              className={`space-y-6 ${isEditMode ? "mt-4" : "mt-8"}`}
               {...provided.droppableProps}
               ref={provided.innerRef}
             >
@@ -481,10 +481,10 @@ export default function RoadmapDetail() {
                       <div
                         ref={provided.innerRef}
                         {...provided.draggableProps}
-                        className={`space-y-5 bg-forge-surface border p-6 rounded-3xl transition-shadow ${
+                        className={`space-y-5 bg-forge-surface border p-6 rounded-xl transition-shadow ${
                           snapshot.isDragging
-                            ? "border-forge-accent shadow-2xl scale-[1.01] z-50"
-                            : "border-forge-border shadow-sm"
+                            ? "border-forge-accent shadow-brand scale-[1.01] z-50"
+                            : "border-forge-border shadow-brand"
                         }`}
                       >
                         {/* Module Header */}
@@ -498,10 +498,10 @@ export default function RoadmapDetail() {
                             </div>
                           )}
                           <div
-                            className={`p-1.5 rounded-md ${
+                            className={`p-1.5 rounded-lg ${
                               isModuleComplete && !isCreateMode
-                                ? "bg-green-50 text-green-500"
-                                : "bg-indigo-50 text-forge-accent border border-indigo-100"
+                                ? "bg-forge-success/10 text-forge-success"
+                                : "bg-forge-accent/10 text-forge-accent border border-forge-accent/20"
                             }`}
                           >
                             {isModuleComplete && !isCreateMode ? (
@@ -528,7 +528,7 @@ export default function RoadmapDetail() {
                           {isEditMode && (
                             <button
                               onClick={() => handleDeleteModule(mod._id)}
-                              className="p-1.5 text-forge-textSecondary hover:text-red-500 rounded-md opacity-50 hover:opacity-100 transition-opacity"
+                              className="p-1.5 text-forge-textSecondary hover:text-forge-danger rounded-lg opacity-50 hover:opacity-100 transition-opacity"
                             >
                               <Trash2 size={16} />
                             </button>
@@ -568,13 +568,13 @@ export default function RoadmapDetail() {
                                       <div
                                         ref={provided.innerRef}
                                         {...provided.draggableProps}
-                                        className={`relative flex items-center gap-4 p-4 rounded-2xl transition-all border group bg-forge-bg ${
+                                        className={`relative flex items-center gap-4 p-4 rounded-xl transition-all border group bg-forge-bg ${
                                           isActuallyDone && !isCreateMode
                                             ? "border-forge-border opacity-60 hover:opacity-100"
-                                            : "border-forge-border shadow-sm hover:border-forge-accent hover:shadow-md"
+                                            : "border-forge-border shadow-sm hover:border-forge-accent hover:shadow-brand"
                                         } ${
                                           snapshot.isDragging
-                                            ? "shadow-2xl border-forge-accent z-50 scale-[1.02] bg-white"
+                                            ? "shadow-brand border-forge-accent z-50 scale-[1.02] bg-white"
                                             : ""
                                         }`}
                                         onClick={() => !isEditMode && setSelectedTask(task)}
@@ -603,7 +603,7 @@ export default function RoadmapDetail() {
                                             isCreateMode
                                               ? "opacity-50"
                                               : isCompleting
-                                              ? "text-green-500"
+                                              ? "text-forge-success"
                                               : isActuallyDone
                                               ? "text-forge-accent"
                                               : "text-forge-textSecondary group-hover:text-forge-accent"
@@ -628,7 +628,7 @@ export default function RoadmapDetail() {
                                             }
                                             className={`font-semibold text-base leading-tight transition-colors duration-300 w-full ${
                                               isCompleting
-                                                ? "text-green-700"
+                                                ? "text-forge-success"
                                                 : isActuallyDone && !isCreateMode
                                                 ? "text-forge-textSecondary line-through"
                                                 : "text-forge-textPrimary"
@@ -682,7 +682,7 @@ export default function RoadmapDetail() {
                                                   </div>
                                                   <button
                                                     onClick={(e) => toggleTaskExpand(task._id, e)}
-                                                    className="flex items-center gap-1.5 text-xs text-forge-accent font-bold mt-3 hover:text-indigo-500 transition-colors bg-indigo-50/50 px-2 py-1 rounded"
+                                                    className="flex items-center gap-1.5 text-xs text-forge-accent font-bold mt-3 hover:text-forge-accentHover transition-colors bg-forge-accent/5 px-2 py-1 rounded"
                                                   >
                                                     <ChevronUp size={14} /> Hide Details
                                                   </button>
@@ -704,7 +704,7 @@ export default function RoadmapDetail() {
                                         {isEditMode && (
                                           <button
                                             onClick={(e) => handleDeleteTask(e, task._id)}
-                                            className="absolute right-4 top-1/2 -translate-y-1/2 p-2 text-forge-textSecondary hover:text-red-500 hover:bg-red-50 rounded-md opacity-0 group-hover:opacity-100 transition-all bg-forge-surface"
+                                            className="absolute right-4 top-1/2 -translate-y-1/2 p-2 text-forge-textSecondary hover:text-forge-danger hover:bg-forge-danger/10 rounded-lg opacity-0 group-hover:opacity-100 transition-all bg-forge-surface"
                                           >
                                             <Trash2 size={16} />
                                           </button>
@@ -719,7 +719,7 @@ export default function RoadmapDetail() {
                               {isEditMode && (
                                 <button
                                   onClick={() => handleAddTask(mod._id)}
-                                  className="w-full flex items-center justify-center gap-2 py-3 border-2 border-dashed border-forge-border text-forge-textSecondary hover:text-forge-accent hover:border-forge-accent hover:bg-forge-surface rounded-xl transition-all font-bold text-sm"
+                                  className="w-full flex items-center justify-center gap-2 py-3 border border-dashed border-forge-border text-forge-textSecondary hover:text-forge-accent hover:border-forge-accent hover:bg-forge-surface rounded-xl transition-all font-bold text-sm"
                                 >
                                   <Plus size={16} /> Add Task
                                 </button>
@@ -737,7 +737,7 @@ export default function RoadmapDetail() {
               {isEditMode && (
                 <button
                   onClick={handleAddModule}
-                  className="w-full flex items-center justify-center gap-2 py-4 border-2 border-dashed border-forge-border text-forge-textSecondary hover:text-forge-accent hover:border-forge-accent hover:bg-forge-surface rounded-2xl transition-all font-bold text-base"
+                  className="w-full flex items-center justify-center gap-2 py-4 border border-dashed border-forge-border text-forge-textSecondary hover:text-forge-accent hover:border-forge-accent hover:bg-forge-surface rounded-xl transition-all font-bold text-base"
                 >
                   <Plus size={20} /> Add Target Module
                 </button>
