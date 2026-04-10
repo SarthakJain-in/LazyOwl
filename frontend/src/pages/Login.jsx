@@ -20,7 +20,7 @@ export default function Login() {
 
     try {
       await login(email, password);
-      navigate("/");
+      navigate("/dashboard");
     } catch (err) {
       setError(err.message);
     } finally {
@@ -128,15 +128,6 @@ export default function Login() {
             </button>
           </form>
 
-          <p className="mt-6 text-center text-sm text-forge-textSecondary">
-            Don't have an account?{" "}
-            <Link
-              to="/register"
-              className="text-forge-accent font-semibold hover:underline"
-            >
-              Create one
-            </Link>
-          </p>
         </div>
       </div>
     </div>

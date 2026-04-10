@@ -14,10 +14,10 @@ export default function AppLayout() {
   };
 
   const navItems = [
-    { name: "Dashboard", path: "/", icon: LayoutDashboard },
-    { name: "Roadmaps", path: "/roadmaps", icon: Map },
-    { name: "Focus", path: "/focus", icon: Focus },
-    { name: "Knowledge", path: "/knowledge", icon: BookOpen },
+    { name: "Dashboard", path: "/dashboard", icon: LayoutDashboard },
+    { name: "Roadmaps", path: "/dashboard/roadmaps", icon: Map },
+    { name: "Focus", path: "/dashboard/focus", icon: Focus },
+    { name: "Knowledge", path: "/dashboard/knowledge", icon: BookOpen },
   ];
 
   const NavLinks = ({ isMobile }) => (

@@ -190,7 +190,7 @@ export default function Dashboard() {
                       </div>
 
                       <Link
-                        to={`/roadmaps/${activeRoadmap._id}`}
+                        to={`/dashboard/roadmaps/${activeRoadmap._id}`}
                         className="mt-4 flex items-center justify-center gap-2 w-full py-2 bg-forge-surface border border-forge-border rounded-lg text-sm text-forge-textPrimary font-semibold hover:border-forge-accent hover:text-forge-accent hover:bg-forge-accent/5 transition-colors"
                       >
                         View Full Roadmap <ArrowRight size={16} />
@@ -212,7 +212,7 @@ export default function Dashboard() {
                   focus.
                 </p>
                 <Link
-                  to="/roadmaps"
+                  to="/dashboard/roadmaps"
                   className="text-sm font-semibold text-forge-accent bg-forge-accent/10 px-4 py-2 rounded-xl hover:bg-forge-accent/20 transition-colors"
                 >
                   Go to Roadmaps

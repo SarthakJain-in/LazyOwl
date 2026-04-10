@@ -199,7 +199,7 @@ export default function RoadmapDetail() {
   const handleDeleteRoadmap = async () => {
     if (window.confirm("Delete this roadmap entirely?")) {
       await deleteRoadmap(id);
-      navigate("/roadmaps");
+      navigate("/dashboard/roadmaps");
     }
   };
 
@@ -316,7 +316,7 @@ export default function RoadmapDetail() {
       }
     }
 
-    navigate(`/roadmaps/${rm._id}`);
+    navigate(`/dashboard/roadmaps/${rm._id}`);
   };
 
   const handleGracefulComplete = (taskId) => {
@@ -346,7 +346,7 @@ export default function RoadmapDetail() {
       {/* Header Actions */}
       <div className="flex justify-between items-center mb-6">
         <Link
-          to="/roadmaps"
+          to="/dashboard/roadmaps"
           className="inline-flex items-center gap-2 text-sm font-semibold text-forge-textSecondary hover:text-forge-accent transition-colors"
         >
           <ArrowLeft size={16} /> Back to Learning Paths
@@ -355,7 +355,7 @@ export default function RoadmapDetail() {
           {isCreateMode ? (
             <>
               <button
-                onClick={() => navigate("/roadmaps")}
+                onClick={() => navigate("/dashboard/roadmaps")}
                 className="px-5 py-2 rounded-xl font-bold text-forge-textSecondary hover:text-forge-textPrimary transition-colors"
               >
                 Cancel

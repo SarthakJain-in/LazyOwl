@@ -10,6 +10,7 @@ import KnowledgeBase from "./pages/KnowledgeBase";
 import RoadmapDetail from "./pages/RoadmapDetail";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import LandingPage from "./pages/LandingPage";
 
 function App() {
   const { initTheme, user } = useAppStore();
@@ -23,17 +24,21 @@ function App() {
       <Routes>
         {/* Public Routes — only accessible when NOT logged in */}
         <Route
+          path="/"
+          element={user ? <Navigate to="/dashboard" replace /> : <LandingPage />}
+        />
+        <Route
           path="/login"
-          element={user ? <Navigate to="/" replace /> : <Login />}
+          element={user ? <Navigate to="/dashboard" replace /> : <Login />}
         />
         <Route
           path="/register"
-          element={user ? <Navigate to="/" replace /> : <Register />}
+          element={user ? <Navigate to="/dashboard" replace /> : <Register />}
         />
 
         {/* Protected Routes — require authentication */}
-        <Route element={<ProtectedRoute />}>
-          <Route path="/" element={<AppLayout />}>
+        <Route path="/dashboard" element={<ProtectedRoute />}>
+          <Route element={<AppLayout />}>
             <Route index element={<Dashboard />} />
             <Route path="roadmaps" element={<Roadmaps />} />
             <Route path="roadmaps/:id" element={<RoadmapDetail />} />

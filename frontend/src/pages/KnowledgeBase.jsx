@@ -536,7 +536,7 @@ export default function KnowledgeBase() {
 
       {/* Shared Modal for Create & Rename */}
       {isFolderModalOpen && (
-        <div className="fixed inset-0 bg-forge-textPrimary/20 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in duration-200">
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in duration-200">
           <div className="bg-forge-surface w-full max-w-sm rounded-xl shadow-brand border border-forge-border p-6 relative animate-in zoom-in-95 duration-200">
             <button
               onClick={() => setIsFolderModalOpen(false)}

@@ -187,12 +187,14 @@ export const useAppStore = create((set, get) => ({
 
   updateTaskOrder: async (tasksArray) => {
     const previousTasks = get().tasks;
-    
+
     // Optimistic UI update
     set({
       tasks: previousTasks.map((t) => {
         const updated = tasksArray.find((ut) => ut._id === t._id);
-        return updated ? { ...t, order: updated.order, moduleId: updated.moduleId } : t;
+        return updated
+          ? { ...t, order: updated.order, moduleId: updated.moduleId }
+          : t;
       }),
     });
 
@@ -204,8 +206,6 @@ export const useAppStore = create((set, get) => ({
       set({ tasks: previousTasks });
     }
   },
-
-
 
   deleteTask: async (id) => {
     try {
@@ -252,7 +252,7 @@ export const useAppStore = create((set, get) => ({
 
   updateModuleOrder: async (modulesArray) => {
     const previousModules = get().modules;
-    
+
     // Optimistic UI update
     set({
       modules: previousModules.map((m) => {
@@ -305,9 +305,14 @@ export const useAppStore = create((set, get) => ({
 
   updateRoadmap: async (id, roadmapData) => {
     try {
-      const updatedRoadmap = await roadmapService.updateRoadmap(id, roadmapData);
+      const updatedRoadmap = await roadmapService.updateRoadmap(
+        id,
+        roadmapData,
+      );
       set((state) => ({
-        roadmaps: state.roadmaps.map((r) => (r._id === id ? updatedRoadmap : r)),
+        roadmaps: state.roadmaps.map((r) =>
+          r._id === id ? updatedRoadmap : r,
+        ),
       }));
     } catch (error) {
       console.error("Error updating roadmap:", error);

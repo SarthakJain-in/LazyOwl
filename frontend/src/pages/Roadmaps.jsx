@@ -143,7 +143,7 @@ export default function Roadmaps() {
       <div className="flex justify-end items-end">
         <div className="flex gap-3">
           <Link
-            to="/roadmaps/new"
+            to="/dashboard/roadmaps/new"
             className="flex items-center gap-2 bg-forge-surface border border-forge-border text-forge-textPrimary px-4 py-2 rounded-lg font-semibold hover:border-forge-accent transition-colors shadow-brand"
           >
             <Plus size={18} />
@@ -197,7 +197,7 @@ export default function Roadmaps() {
               </button>
 
               <Link
-                to={`/roadmaps/${roadmap._id}`}
+                to={`/dashboard/roadmaps/${roadmap._id}`}
                 className="block bg-forge-surface border border-forge-border rounded-xl shadow-sm overflow-hidden transition-all hover:border-forge-accent hover:shadow-brand hover:-translate-y-0.5"
               >
                 <div className="p-6 border-b border-forge-border bg-forge-bg/50">
@@ -231,7 +231,7 @@ export default function Roadmaps() {
 
       {/* AI Generation Modal Overlay */}
       {isModalOpen && (
-        <div className="fixed inset-0 bg-forge-textPrimary/20 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in duration-200">
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in duration-200">
           <div className="bg-forge-surface w-full max-w-md rounded-xl shadow-brand border border-forge-border p-6 relative animate-in zoom-in-95 duration-200">
             <button
               onClick={() => setIsModalOpen(false)}
@@ -305,7 +305,7 @@ export default function Roadmaps() {
 
       {/* PDF Import Modal Overlay */}
       {isImportModalOpen && (
-        <div className="fixed inset-0 bg-forge-textPrimary/20 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in duration-200">
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in duration-200">
           <div className="bg-forge-surface w-full max-w-md rounded-xl shadow-brand border border-forge-border p-6 relative animate-in zoom-in-95 duration-200">
             <button
               onClick={closeImportModal}
