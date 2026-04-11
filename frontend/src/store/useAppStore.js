@@ -7,7 +7,11 @@ import { noteFolderService } from "../services/noteFolderService";
 import { authService } from "../services/authService";
 import { getAuthHeaders } from "../services/authService";
 
-const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+const BASE_URL = import.meta.env.VITE_API_BASE_URL || "";
+
+if (!BASE_URL && import.meta.env.PROD) {
+  console.error("⚠️ CRITICAL DEPLOYMENT WARNING: VITE_API_BASE_URL environment variable is missing. API calls will fail.");
+}
 
 export const useAppStore = create((set, get) => ({
   tasks: [],

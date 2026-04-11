@@ -71,7 +71,7 @@ app.use(/^((?!\/api).)*$/, (req, res) => {
       <p style="font-size: 1.2rem; opacity: 0.8; max-width: 600px;">You are currently accessing the Backend API Server directly. This endpoint is reserved for API calls.</p>
       <div style="margin-top: 2rem; padding: 2rem; border: 1px dashed #334155; border-radius: 2rem; background: #1e293b66;">
         <p style="margin-bottom: 1rem; font-weight: 500;">Looking for the platform?</p>
-        <a href="http://localhost:5173" style="background: #38bdf8; color: #0f172a; text-decoration: none; padding: 0.75rem 1.5rem; border-radius: 1rem; font-weight: bold; transition: all 0.2s;">
+        <a href="${process.env.CLIENT_URL || 'http://localhost:5173'}" style="background: #38bdf8; color: #0f172a; text-decoration: none; padding: 0.75rem 1.5rem; border-radius: 1rem; font-weight: bold; transition: all 0.2s;">
           Open LazyOwl App
         </a>
       </div>
