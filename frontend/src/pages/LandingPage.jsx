@@ -16,14 +16,27 @@ import {
   ChevronRight,
 } from "lucide-react";
 
-import mockup1 from "../assets/mockup/1.jpg";
-import mockup2 from "../assets/mockup/2.jpg";
-import mockup3 from "../assets/mockup/3.jpg";
-import mockup4 from "../assets/mockup/4.jpg";
+import l1 from "../assets/mockup/light/L1.jpg";
+import l2 from "../assets/mockup/light/L2.jpg";
+import l3 from "../assets/mockup/light/L3.jpg";
+import l4 from "../assets/mockup/light/L4.jpg";
+import l5 from "../assets/mockup/light/L5.jpg";
 
-const mockups = [mockup1, mockup2, mockup3, mockup4];
+import d1 from "../assets/mockup/dark/D1.jpg";
+import d2 from "../assets/mockup/dark/D2.jpg";
+import d3 from "../assets/mockup/dark/D3.jpg";
+import d4 from "../assets/mockup/dark/D4.jpg";
+import d5 from "../assets/mockup/dark/D5.jpg";
+
+import ThemeToggle from "../components/ThemeToggle";
+import { useAppStore } from "../store/useAppStore";
+
+const lightMockups = [l1, l2, l3, l4, l5];
+const darkMockups = [d1, d2, d3, d4, d5];
 
 export default function LandingPage() {
+  const isDarkMode = useAppStore((state) => state.isDarkMode);
+  const mockups = isDarkMode ? darkMockups : lightMockups;
   const [currentMockup, setCurrentMockup] = useState(0);
 
   useEffect(() => {
@@ -31,7 +44,7 @@ export default function LandingPage() {
       setCurrentMockup((prev) => (prev + 1) % mockups.length);
     }, 4000);
     return () => clearInterval(timer);
-  }, []);
+  }, [mockups.length]);
 
   const nextMockup = () =>
     setCurrentMockup((prev) => (prev + 1) % mockups.length);
@@ -54,6 +67,7 @@ export default function LandingPage() {
             </span>
           </div>
           <div className="flex items-center gap-4">
+            <ThemeToggle />
             <a
               href="https://github.com/SarthakJain-in"
               target="_blank"

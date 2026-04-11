@@ -1,31 +1,49 @@
-import { useEffect } from "react";
+import { useEffect, useState, Suspense, lazy } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { useAppStore } from "./store/useAppStore";
 import ProtectedRoute from "./components/ProtectedRoute";
 import AppLayout from "./layouts/AppLayout";
-import Dashboard from "./pages/Dashboard";
-import Roadmaps from "./pages/Roadmaps";
-import Focus from "./pages/Focus";
-import KnowledgeBase from "./pages/KnowledgeBase";
-import RoadmapDetail from "./pages/RoadmapDetail";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import LandingPage from "./pages/LandingPage";
+import PageLoader from "./components/PageLoader";
+import InitialLoader from "./components/InitialLoader";
+
+const Dashboard = lazy(() => import("./pages/Dashboard"));
+const Roadmaps = lazy(() => import("./pages/Roadmaps"));
+const Focus = lazy(() => import("./pages/Focus"));
+const KnowledgeBase = lazy(() => import("./pages/KnowledgeBase"));
+const RoadmapDetail = lazy(() => import("./pages/RoadmapDetail"));
 
 function App() {
   const { initTheme, user } = useAppStore();
+  const [showInitialLoader, setShowInitialLoader] = useState(() => {
+    return !sessionStorage.getItem('hasSeenInitialLoader');
+  });
+
+  const handleLoaderComplete = () => {
+    sessionStorage.setItem('hasSeenInitialLoader', 'true');
+    setShowInitialLoader(false);
+  };
 
   useEffect(() => {
     initTheme();
   }, [initTheme]);
 
+  if (showInitialLoader) {
+    return <InitialLoader onComplete={handleLoaderComplete} />;
+  }
+
   return (
     <BrowserRouter>
-      <Routes>
+      <Suspense fallback={<PageLoader />}>
+        <Routes>
         {/* Public Routes — only accessible when NOT logged in */}
         <Route
           path="/"
-          element={user ? <Navigate to="/dashboard" replace /> : <LandingPage />}
+          element={
+            user ? <Navigate to="/dashboard" replace /> : <LandingPage />
+          }
         />
         <Route
           path="/login"
@@ -49,7 +67,8 @@ function App() {
 
         {/* Catch-all: redirect to login */}
         <Route path="*" element={<Navigate to="/login" replace />} />
-      </Routes>
+        </Routes>
+      </Suspense>
     </BrowserRouter>
   );
 }

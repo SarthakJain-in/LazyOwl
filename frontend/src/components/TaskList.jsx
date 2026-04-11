@@ -33,8 +33,8 @@ export default function TaskList() {
 
   if (displayTasks.length === 0) {
     return (
-      <div className="text-center p-6 border border-forge-border rounded-xl bg-green-50/50">
-        <CheckCircle2 className="mx-auto text-green-500 mb-2" size={24} />
+      <div className="flex flex-col items-center justify-center p-6 border border-green-500/20 rounded-xl bg-green-500/10 shadow-sm backdrop-blur-sm">
+        <CheckCircle2 className="text-green-500 mb-2" size={24} />
         <p className="text-forge-textPrimary font-bold text-sm">
           All caught up!
         </p>

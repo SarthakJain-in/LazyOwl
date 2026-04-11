@@ -1,6 +1,8 @@
+import { Suspense, useState, useEffect } from "react";
 import { Outlet, Link, useLocation, useNavigate } from "react-router-dom";
 import { LayoutDashboard, Map, Focus, BookOpen, LogOut } from "lucide-react";
 import ThemeToggle from "../components/ThemeToggle";
+import PageLoader from "../components/PageLoader";
 import { useAppStore } from "../store/useAppStore";
 
 export default function AppLayout() {
@@ -123,10 +125,11 @@ export default function AppLayout() {
         </button>
       </aside>
 
-      {/* Main Content Area */}
-      <main className="flex-1 bg-forge-bg md:border border-forge-border md:rounded-xl md:shadow-brand overflow-y-auto pb-20 md:pb-0">
-        <div className="w-full h-full p-4 md:p-8">
-          <Outlet />
+      <main className="flex-1 bg-forge-bg md:border border-forge-border md:rounded-xl md:shadow-brand overflow-y-auto pb-20 md:pb-0 relative">
+        <div className="relative w-full min-h-full p-4 md:p-8 flex flex-col">
+          <Suspense key={location.pathname} fallback={<PageLoader />}>
+            <Outlet />
+          </Suspense>
         </div>
       </main>
 

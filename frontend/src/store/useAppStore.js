@@ -20,7 +20,7 @@ export const useAppStore = create((set, get) => ({
   isGenerating: false,
   isImporting: false,
   error: null,
-  isDarkMode: localStorage.getItem("theme") === "dark",
+  isDarkMode: localStorage.getItem("theme") ? localStorage.getItem("theme") === "dark" : true,
 
   // --- AUTH STATE ---
   user: authService.getCurrentUser(),
@@ -53,17 +53,13 @@ export const useAppStore = create((set, get) => ({
   },
 
   initTheme: () => {
-    // Check local storage or the user's system preferences
-    if (
-      get().isDarkMode ||
-      (!("theme" in localStorage) &&
-        window.matchMedia("(prefers-color-scheme: dark)").matches)
-    ) {
-      document.documentElement.classList.add("dark");
-      set({ isDarkMode: true });
-    } else {
+    // Default to dark unless explicitly set to light
+    if (localStorage.getItem("theme") === "light") {
       document.documentElement.classList.remove("dark");
       set({ isDarkMode: false });
+    } else {
+      document.documentElement.classList.add("dark");
+      set({ isDarkMode: true });
     }
   },
 
@@ -138,11 +134,17 @@ export const useAppStore = create((set, get) => ({
 
     // 1. Optimistic UI Update: Toggle task instantly
     set({
-      tasks: previousTasks.map((task) =>
-        task._id === taskId
-          ? { ...task, isCompleted: !task.isCompleted }
-          : task,
-      ),
+      tasks: previousTasks.map((task) => {
+        if (task._id === taskId) {
+          const isNowCompleted = !task.isCompleted;
+          return {
+            ...task,
+            isCompleted: isNowCompleted,
+            completedAt: isNowCompleted ? new Date().toISOString() : null,
+          };
+        }
+        return task;
+      }),
     });
 
     try {
