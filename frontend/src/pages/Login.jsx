@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAppStore } from "../store/useAppStore";
-import { LogIn, Mail, Lock, Eye, EyeOff, Loader2 } from "lucide-react";
+import { LogIn, Mail, Lock, Eye, EyeOff, Loader2, ArrowLeft } from "lucide-react";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -29,7 +29,15 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-forge-bg p-4">
+    <div className="min-h-screen flex items-center justify-center bg-forge-bg p-4 relative">
+      <Link
+        to="/"
+        className="absolute top-6 left-6 p-2 rounded-full border border-forge-border bg-forge-surface hover:bg-forge-bg text-forge-textSecondary hover:text-forge-textPrimary transition-all shadow-sm flex items-center gap-2"
+        title="Back to home"
+      >
+        <ArrowLeft size={20} />
+        <span className="hidden sm:inline text-sm font-medium pr-2">Back</span>
+      </Link>
       <div className="w-full max-w-md">
         {/* Logo */}
         <div className="text-center mb-8">

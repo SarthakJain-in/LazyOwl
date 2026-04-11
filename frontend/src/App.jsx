@@ -38,19 +38,18 @@ function App() {
     <BrowserRouter>
       <Suspense fallback={<PageLoader />}>
         <Routes>
-        {/* Public Routes — only accessible when NOT logged in */}
-        <Route
-          path="/"
-          element={
-            user ? <Navigate to="/dashboard" replace /> : <LandingPage />
-          }
-        />
+        {/* Public Routes */}
+        <Route path="/" element={<LandingPage />} />
         <Route
           path="/login"
           element={user ? <Navigate to="/dashboard" replace /> : <Login />}
         />
         <Route
           path="/register"
+          element={user ? <Navigate to="/dashboard" replace /> : <Register />}
+        />
+        <Route
+          path="/signup"
           element={user ? <Navigate to="/dashboard" replace /> : <Register />}
         />
 

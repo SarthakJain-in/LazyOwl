@@ -68,15 +68,17 @@ export default function AppLayout() {
       {/* Desktop Sidebar */}
       <aside className="hidden md:flex flex-col w-72 bg-transparent gap-5 shrink-0">
         <div className="px-3 pt-2 pb-1 flex items-center justify-between">
-          <span
-            className="font-black text-3xl tracking-tighter transition-colors duration-500"
-            style={{
-              color: "var(--brand-title-color)",
-              fontFamily: "'Outfit', sans-serif",
-            }}
-          >
-            LazyOwl.
-          </span>
+          <Link to="/">
+            <span
+              className="font-black text-3xl tracking-tighter transition-colors duration-500"
+              style={{
+                color: "var(--brand-title-color)",
+                fontFamily: "'Outfit', sans-serif",
+              }}
+            >
+              LazyOwl.
+            </span>
+          </Link>
           <ThemeToggle />
         </div>
 

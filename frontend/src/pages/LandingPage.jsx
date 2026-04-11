@@ -36,6 +36,7 @@ const darkMockups = [d1, d2, d3, d4, d5];
 
 export default function LandingPage() {
   const isDarkMode = useAppStore((state) => state.isDarkMode);
+  const user = useAppStore((state) => state.user);
   const mockups = isDarkMode ? darkMockups : lightMockups;
   const [currentMockup, setCurrentMockup] = useState(0);
 
@@ -77,12 +78,21 @@ export default function LandingPage() {
             >
               <Github size={20} />
             </a>
-            <Link
-              to="/login"
-              className="px-4 py-2 text-sm font-semibold rounded-xl border border-forge-border hover:border-forge-accent/40 bg-forge-surface hover:bg-forge-bg transition-all shadow-sm flex items-center gap-2"
-            >
-              Admin Login <ArrowRight size={16} />
-            </Link>
+            {user ? (
+              <Link
+                to="/dashboard"
+                className="px-4 py-2 text-sm font-semibold rounded-xl border border-forge-border hover:border-forge-accent/40 bg-forge-surface hover:bg-forge-bg transition-all shadow-sm flex items-center gap-2"
+              >
+                Dashboard <LayoutDashboard size={16} />
+              </Link>
+            ) : (
+              <Link
+                to="/login"
+                className="px-4 py-2 text-sm font-semibold rounded-xl border border-forge-border hover:border-forge-accent/40 bg-forge-surface hover:bg-forge-bg transition-all shadow-sm flex items-center gap-2"
+              >
+                Admin Login <ArrowRight size={16} />
+              </Link>
+            )}
           </div>
         </div>
       </nav>
