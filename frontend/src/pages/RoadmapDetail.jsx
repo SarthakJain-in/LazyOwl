@@ -18,6 +18,7 @@ import {
   ChevronUp,
 } from "lucide-react";
 import TaskDetailModal from "../components/TaskDetailModal";
+import PageLoader from "../components/PageLoader";
 
 const generateId = () => Math.random().toString(36).substr(2, 9);
 
@@ -329,11 +330,7 @@ export default function RoadmapDetail() {
   };
 
   if (!activeRoadmap && !isCreateMode)
-    return (
-      <div className="p-8 text-forge-textSecondary animate-pulse">
-        Loading roadmap...
-      </div>
-    );
+    return <PageLoader />;
 
   const completedCount = activeTasks.filter((t) => t.isCompleted).length;
   const dynamicProgress =

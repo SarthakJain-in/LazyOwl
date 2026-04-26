@@ -2,6 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import { Link } from "react-router-dom";
 import { useAppStore } from "../store/useAppStore";
 import { roadmapService } from "../services/roadmapService";
+import PageLoader from "../components/PageLoader";
 import {
   Map,
   Plus,
@@ -130,11 +131,7 @@ export default function Roadmaps() {
   };
 
   if (isLoading && roadmaps.length === 0) {
-    return (
-      <div className="animate-pulse text-forge-textSecondary">
-        Loading your learning paths...
-      </div>
-    );
+    return <PageLoader />;
   }
 
   return (
