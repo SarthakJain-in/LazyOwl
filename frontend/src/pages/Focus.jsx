@@ -1,35 +1,145 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Play, Pause, RotateCcw, BrainCircuit, Coffee } from "lucide-react";
+import { useAppStore } from "../store/useAppStore";
 
 export default function Focus() {
-  const [timeLeft, setTimeLeft] = useState(25 * 60); // 25 minutes in seconds
-  const [isActive, setIsActive] = useState(false);
-  const [mode, setMode] = useState("work"); // 'work' or 'break'
+  const { focusState, setFocusState, addFocusTime } = useAppStore();
+  const { timeLeft, isActive, mode, lastTick, workTimeLeft, breakTimeLeft } = focusState;
+
+  const accumulatedSecondsRef = useRef(0);
+
+  // Function to sync accumulated time to backend
+  const syncFocusTime = () => {
+    console.log("syncFocusTime called. Accumulated:", accumulatedSecondsRef.current);
+    if (accumulatedSecondsRef.current > 0) {
+      console.log("Sending to backend:", accumulatedSecondsRef.current);
+      addFocusTime(accumulatedSecondsRef.current);
+      accumulatedSecondsRef.current = 0;
+    }
+  };
+
+  // Initialize: if coming back, calculate elapsed time
+  useEffect(() => {
+    if (isActive && lastTick) {
+      const now = Date.now();
+      const elapsedSeconds = Math.floor((now - lastTick) / 1000);
+      if (elapsedSeconds > 0) {
+        const newTimeLeft = Math.max(0, timeLeft - elapsedSeconds);
+        if (mode === "work") {
+          // If they were away, add the elapsed time (up to whatever time was left)
+          const validWorkSeconds = Math.min(elapsedSeconds, timeLeft);
+          accumulatedSecondsRef.current += validWorkSeconds;
+        }
+        setFocusState({ timeLeft: newTimeLeft, lastTick: now });
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const lastTickRef = useRef(lastTick);
+  const timeLeftRef = useRef(timeLeft);
+  
+  // Keep the refs strictly in sync with the state
+  useEffect(() => {
+    lastTickRef.current = lastTick;
+    timeLeftRef.current = timeLeft;
+  }, [lastTick, timeLeft]);
 
   useEffect(() => {
     let interval = null;
-    if (isActive && timeLeft > 0) {
+    if (isActive && timeLeftRef.current > 0) {
       interval = setInterval(() => {
-        setTimeLeft((time) => time - 1);
-      }, 1000);
-    } else if (timeLeft === 0) {
-      setIsActive(false);
+        const now = Date.now();
+        // Use the ref to prevent dependency thrashing
+        const safeLastTick = lastTickRef.current || now;
+        const elapsedSeconds = Math.floor((now - safeLastTick) / 1000);
+
+        if (elapsedSeconds >= 1) {
+          const newTimeLeft = Math.max(0, timeLeftRef.current - elapsedSeconds);
+          
+          // Update refs immediately so the next tick calculates correctly
+          lastTickRef.current = safeLastTick + elapsedSeconds * 1000;
+          timeLeftRef.current = newTimeLeft;
+
+          setFocusState({
+            timeLeft: newTimeLeft,
+            lastTick: lastTickRef.current,
+          });
+          
+          if (mode === "work") {
+            accumulatedSecondsRef.current += elapsedSeconds;
+            
+            // Auto-sync every 1 minute to ensure data isn't lost if they navigate away unexpectedly
+            if (accumulatedSecondsRef.current >= 60) {
+              syncFocusTime();
+            }
+          }
+        }
+      }, 500);
+    } else if (timeLeft === 0 && isActive) {
+      setFocusState({ isActive: false });
+      syncFocusTime();
       // Optional: Add a browser notification sound here later!
     }
-    return () => clearInterval(interval);
-  }, [isActive, timeLeft]);
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+    // Removed timeLeft and lastTick from dependencies!
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isActive, mode]);
 
-  const toggleTimer = () => setIsActive(!isActive);
+  // Also sync when unmounting
+  useEffect(() => {
+    return () => syncFocusTime();
+  }, []);
+
+  const toggleTimer = () => {
+    if (isActive) {
+      // Pausing
+      syncFocusTime();
+    }
+    setFocusState({ isActive: !isActive, lastTick: Date.now() });
+  };
 
   const resetTimer = () => {
-    setIsActive(false);
-    setTimeLeft(mode === "work" ? 25 * 60 : 5 * 60);
+    syncFocusTime();
+    const defaultTime = mode === "work" ? 25 * 60 : 5 * 60;
+    setFocusState({
+      isActive: false,
+      timeLeft: defaultTime,
+      workTimeLeft: mode === "work" ? defaultTime : workTimeLeft,
+      breakTimeLeft: mode === "break" ? defaultTime : breakTimeLeft,
+      lastTick: null,
+    });
   };
 
   const switchMode = (newMode) => {
-    setMode(newMode);
-    setIsActive(false);
-    setTimeLeft(newMode === "work" ? 25 * 60 : 5 * 60);
+    if (newMode === mode) return;
+
+    syncFocusTime();
+    
+    // Save current progress
+    let savedWorkTime = mode === "work" ? timeLeft : workTimeLeft;
+    let savedBreakTime = mode === "break" ? timeLeft : breakTimeLeft;
+
+    // Determine what the new time left should be
+    let nextTimeLeft = newMode === "work" ? savedWorkTime : savedBreakTime;
+    
+    // Auto-reset if they switch to a mode that was already completed
+    if (nextTimeLeft === 0) {
+      nextTimeLeft = newMode === "work" ? 25 * 60 : 5 * 60;
+      if (newMode === "work") savedWorkTime = nextTimeLeft;
+      if (newMode === "break") savedBreakTime = nextTimeLeft;
+    }
+
+    setFocusState({
+      mode: newMode,
+      isActive: isActive,
+      workTimeLeft: savedWorkTime,
+      breakTimeLeft: savedBreakTime,
+      timeLeft: nextTimeLeft,
+      lastTick: isActive ? Date.now() : null,
+    });
   };
 
   // Format seconds into MM:SS

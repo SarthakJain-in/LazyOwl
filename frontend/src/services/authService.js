@@ -39,6 +39,23 @@ export const authService = {
     localStorage.removeItem("user");
   },
 
+  addFocusTime: async (focusSeconds) => {
+    const numericSeconds = Number(focusSeconds);
+    const response = await fetch(`${API_URL}/focus`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        ...getAuthHeaders()
+      },
+      body: JSON.stringify({ focusSeconds: numericSeconds }),
+    });
+
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.message || "Failed to update focus time");
+
+    return data;
+  },
+
   // Helper: Get the current user from localStorage
   getCurrentUser: () => {
     const user = localStorage.getItem("user");

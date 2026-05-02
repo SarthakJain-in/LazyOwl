@@ -34,6 +34,7 @@ export const registerUser = async (req, res) => {
       _id: user._id,
       name: user.name,
       email: user.email,
+      totalFocusSeconds: user.totalFocusSeconds || 0,
       token: token,
     });
   } catch (error) {
@@ -57,11 +58,37 @@ export const loginUser = async (req, res) => {
         _id: user._id,
         name: user.name,
         email: user.email,
+        totalFocusSeconds: user.totalFocusSeconds || 0,
         token: generateToken(user._id),
       });
     } else {
       res.status(401).json({ message: "Invalid email or password" });
     }
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
+// @desc    Add time to total focus
+// @route   PATCH /api/auth/focus
+export const addFocusTime = async (req, res) => {
+  try {
+    const { focusSeconds } = req.body;
+    console.log(`Backend received addFocusTime request: ${focusSeconds} seconds for user ${req.user._id}`);
+    if (!focusSeconds || typeof focusSeconds !== 'number') {
+      console.log("Invalid focus time received:", focusSeconds);
+      return res.status(400).json({ message: "Invalid focus time" });
+    }
+
+    const user = await User.findById(req.user._id);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    user.totalFocusSeconds = (user.totalFocusSeconds || 0) + focusSeconds;
+    await user.save();
+
+    res.json({ totalFocusSeconds: user.totalFocusSeconds });
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });
   }

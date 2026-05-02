@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 
 export default function Dashboard() {
-  const { tasks, roadmaps, streak, fetchTasks, fetchRoadmaps, fetchStreak } =
+  const { user, tasks, roadmaps, streak, fetchTasks, fetchRoadmaps, fetchStreak } =
     useAppStore();
 
   useEffect(() => {
@@ -35,14 +35,13 @@ export default function Dashboard() {
   const totalTasks = activeTasks.length;
   const completedTasks = activeTasks.filter((task) => task.isCompleted).length;
 
-  // 3. Calculate Lifetime Total Hours
-  const lifetimeCompletedTasks = tasks.filter((task) => task.isCompleted);
-  const totalMinutes = lifetimeCompletedTasks.reduce(
-    (sum, task) => sum + (task.durationMinutes || 0),
-    0,
-  );
-  const totalHours =
-    totalMinutes > 0 ? Number((totalMinutes / 60).toFixed(1)) : 0;
+  // 3. Calculate Lifetime Total Hours from Focus Tracker
+  let totalFocusSeconds = user?.totalFocusSeconds;
+  if (isNaN(totalFocusSeconds) || !totalFocusSeconds) totalFocusSeconds = 0;
+  
+  const hours = Math.floor(totalFocusSeconds / 3600);
+  const minutes = Math.floor((totalFocusSeconds % 3600) / 60);
+  const totalTimeDisplay = `${hours}h ${minutes}m`;
 
   // 1. Get current date and subtract 24 hours
   const oneDayAgo = new Date();
@@ -56,8 +55,7 @@ export default function Dashboard() {
         task.completedAt &&
         new Date(task.completedAt) > oneDayAgo,
     )
-    .sort((a, b) => new Date(b.completedAt) - new Date(a.completedAt)) // Fresh wins first
-    .slice(0, 5); // Show top 5
+    .sort((a, b) => new Date(b.completedAt) - new Date(a.completedAt)); // Fresh wins first
 
   return (
     <div className="space-y-5 animate-in fade-in duration-500">
@@ -90,10 +88,10 @@ export default function Dashboard() {
           </div>
           <div>
             <p className="text-sm font-semibold text-forge-textSecondary uppercase tracking-wider">
-              Total Hours
+              Total Time
             </p>
             <h3 className="text-2xl font-bold text-forge-textPrimary mt-0.5">
-              {totalHours}h
+              {totalTimeDisplay}
             </h3>
           </div>
         </div>
@@ -228,11 +226,11 @@ export default function Dashboard() {
                 <CheckCircle2 size={20} className="text-forge-success" /> Today's
                 Wins
               </h3>
-              <div className="space-y-3">
+              <div className="space-y-3 max-h-[350px] overflow-y-auto pr-2">
                 {recentlyCompleted.map((task) => (
                   <div
                     key={task._id}
-                    className="flex items-center gap-3 p-2.5 bg-forge-success/5 border border-forge-success/20 rounded-lg opacity-90"
+                    className="flex items-center gap-3 p-2.5 bg-forge-success/5 border border-forge-success/20 rounded-lg opacity-90 shrink-0"
                   >
                     <div className="bg-forge-success/20 text-forge-success p-1.5 rounded-full">
                       <Check size={14} strokeWidth={3} />

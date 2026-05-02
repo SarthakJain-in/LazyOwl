@@ -13,14 +13,15 @@ const userSchema = new mongoose.Schema(
     streakCount: { type: Number, default: 0 },
     lastActiveDate: { type: Date },
     totalLearningHours: { type: Number, default: 0 },
+    totalFocusSeconds: { type: Number, default: 0 },
   },
   { timestamps: true },
 );
 
 // NEW: Automatically hash the password before saving it to the database
-userSchema.pre("save", async function (next) {
+userSchema.pre("save", async function () {
   // If the password hasn't been changed (e.g., just updating totalLearningHours), skip hashing
-  if (!this.isModified("password")) return next();
+  if (!this.isModified("password")) return;
 
   const salt = await bcrypt.genSalt(10);
   this.password = await bcrypt.hash(this.password, salt);

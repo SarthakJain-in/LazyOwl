@@ -88,6 +88,7 @@ export default function RoadmapDetail() {
   const [completingIds, setCompletingIds] = useState([]);
   const [isEditMode, setIsEditMode] = useState(isCreateMode);
   const [expandedTasks, setExpandedTasks] = useState([]);
+  const [isCreating, setIsCreating] = useState(false);
 
   const toggleTaskExpand = (taskId, e) => {
     e.stopPropagation();
@@ -291,33 +292,43 @@ export default function RoadmapDetail() {
 
   const handleCreateSubmit = async () => {
     if (!draftRoadmap.title.trim()) return alert("Roadmap needs a title!");
-    const rm = await addRoadmap({
-      title: draftRoadmap.title,
-      category: draftRoadmap.category || "Custom",
-    });
-
-    for (const mod of draftModules) {
-      if (!mod.title.trim()) continue; // Skip empty modules
-      const newMod = await addModule({
-        roadmapId: rm._id,
-        title: mod.title,
-        order: mod.order,
+    if (isCreating) return;
+    
+    setIsCreating(true);
+    try {
+      const rm = await addRoadmap({
+        title: draftRoadmap.title,
+        category: draftRoadmap.category || "Custom",
       });
 
-      const tasksForMod = draftTasks.filter((t) => t.moduleId === mod._id);
-      for (const task of tasksForMod) {
-        if (!task.title.trim()) continue; // Skip empty tasks
-        await addTask({
+      for (const mod of draftModules) {
+        if (!mod.title.trim()) continue; // Skip empty modules
+        const newMod = await addModule({
           roadmapId: rm._id,
-          moduleId: newMod._id,
-          title: task.title,
-          durationMinutes: Number(task.durationMinutes) || 30,
-          order: task.order,
+          title: mod.title,
+          order: mod.order,
         });
-      }
-    }
 
-    navigate(`/dashboard/roadmaps/${rm._id}`);
+        const tasksForMod = draftTasks.filter((t) => t.moduleId === mod._id);
+        for (const task of tasksForMod) {
+          if (!task.title.trim()) continue; // Skip empty tasks
+          await addTask({
+            roadmapId: rm._id,
+            moduleId: newMod._id,
+            title: task.title,
+            durationMinutes: Number(task.durationMinutes) || 30,
+            order: task.order,
+          });
+        }
+      }
+
+      navigate(`/dashboard/roadmaps/${rm._id}`);
+    } catch (error) {
+      console.error("Error creating roadmap:", error);
+      alert("Failed to create roadmap. Please try again.");
+    } finally {
+      setIsCreating(false);
+    }
   };
 
   const handleGracefulComplete = (taskId) => {
@@ -359,9 +370,14 @@ export default function RoadmapDetail() {
               </button>
               <button
                 onClick={handleCreateSubmit}
-                className="bg-forge-accent text-white px-6 py-2 rounded-xl font-bold hover:bg-forge-accentHover transition-colors shadow-brand"
+                disabled={isCreating}
+                className={`px-6 py-2 rounded-xl font-bold transition-colors shadow-brand text-white ${
+                  isCreating
+                    ? "bg-forge-accent/70 cursor-not-allowed"
+                    : "bg-forge-accent hover:bg-forge-accentHover"
+                }`}
               >
-                Create Roadmap
+                {isCreating ? "Creating..." : "Create Roadmap"}
               </button>
             </>
           ) : (

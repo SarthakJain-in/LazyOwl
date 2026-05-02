@@ -29,6 +29,19 @@ export const useAppStore = create((set, get) => ({
   // --- AUTH STATE ---
   user: authService.getCurrentUser(),
 
+  // --- FOCUS TIMER STATE ---
+  focusState: {
+    timeLeft: 25 * 60,
+    workTimeLeft: 25 * 60,
+    breakTimeLeft: 5 * 60,
+    isActive: false,
+    mode: "work",
+    lastTick: null, // to calculate elapsed time even if unmounted
+  },
+  setFocusState: (updates) => set((state) => ({
+    focusState: { ...state.focusState, ...updates }
+  })),
+
   // --- THEME ACTIONS ---
   toggleTheme: (x, y) => {
     const update = () => {
@@ -106,6 +119,21 @@ export const useAppStore = create((set, get) => ({
     });
   },
 
+  addFocusTime: async (focusSeconds) => {
+    try {
+      const data = await authService.addFocusTime(focusSeconds);
+      // Update local user state and localStorage to keep it in sync
+      set((state) => {
+        if (!state.user) return state;
+        const updatedUser = { ...state.user, totalFocusSeconds: data.totalFocusSeconds };
+        localStorage.setItem("user", JSON.stringify(updatedUser));
+        return { user: updatedUser };
+      });
+    } catch (error) {
+      console.error("Error updating focus time:", error);
+    }
+  },
+
   // 1. Fetch tasks using the service
   fetchTasks: async () => {
     set({ isLoading: true, error: null });
@@ -173,8 +201,8 @@ export const useAppStore = create((set, get) => ({
   addTask: async (taskData) => {
     try {
       const newTask = await taskService.createTask(taskData);
-      // Instantly add the new task to the top of the list in the UI
-      set((state) => ({ tasks: [newTask, ...state.tasks] }));
+      // Add the new task to the end of the list in the UI
+      set((state) => ({ tasks: [...state.tasks, newTask] }));
     } catch (error) {
       console.error("Error creating task:", error);
     }

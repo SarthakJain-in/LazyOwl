@@ -4,7 +4,7 @@ import { CheckCircle2, Circle } from "lucide-react";
 import TaskDetailModal from "./TaskDetailModal";
 
 export default function TaskList() {
-  const { tasks, roadmaps, toggleTask } = useAppStore();
+  const { tasks, modules, roadmaps, toggleTask } = useAppStore();
   const [selectedTask, setSelectedTask] = useState(null);
 
   // State to hold IDs of tasks that are currently fading out
@@ -25,9 +25,26 @@ export default function TaskList() {
 
   let displayTasks = [];
   activeRoadmaps.forEach((roadmap) => {
-    const nextTasksForThisRoadmap = tasks
-      .filter((t) => t.roadmapId === roadmap._id && !t.isCompleted)
-      .slice(0, 2);
+    const roadmapModules = modules
+      .filter((m) => String(m.roadmapId) === String(roadmap._id))
+      .sort((a, b) => (a.order || 0) - (b.order || 0));
+
+    const roadmapTasks = tasks.filter((t) => String(t.roadmapId) === String(roadmap._id) && !t.isCompleted);
+
+    // Sort tasks primarily by their module's order, then by the task's own order
+    roadmapTasks.sort((a, b) => {
+      const moduleA = roadmapModules.find((m) => String(m._id) === String(a.moduleId));
+      const moduleB = roadmapModules.find((m) => String(m._id) === String(b.moduleId));
+      const modOrderA = moduleA ? (moduleA.order || 0) : 0;
+      const modOrderB = moduleB ? (moduleB.order || 0) : 0;
+
+      if (modOrderA !== modOrderB) {
+        return modOrderA - modOrderB;
+      }
+      return (a.order || 0) - (b.order || 0);
+    });
+
+    const nextTasksForThisRoadmap = roadmapTasks.slice(0, 2);
     displayTasks = [...displayTasks, ...nextTasksForThisRoadmap];
   });
 

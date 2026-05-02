@@ -29,7 +29,7 @@ export const getTasks = async (req, res) => {
     // Find all roadmaps belonging to this user, then find tasks for those roadmaps
     const userRoadmaps = await Roadmap.find({ userId: req.user._id }).select("_id");
     const roadmapIds = userRoadmaps.map((r) => r._id);
-    const tasks = await Task.find({ roadmapId: { $in: roadmapIds } }).sort({ createdAt: -1 });
+    const tasks = await Task.find({ roadmapId: { $in: roadmapIds } }).sort({ order: 1, createdAt: 1 });
     res.status(200).json(tasks);
   } catch (error) {
     res
@@ -42,12 +42,13 @@ export const getTasks = async (req, res) => {
 // @route   POST /api/tasks
 export const createTask = async (req, res) => {
   try {
-    const { roadmapId, title, moduleId, durationMinutes, description } = req.body;
+    const { roadmapId, title, moduleId, durationMinutes, description, order } = req.body;
 
     const newTask = await Task.create({
       roadmapId,
       title,
       moduleId,
+      order: order || 0,
       durationMinutes: durationMinutes || 30,
       description: description || "",
     });
