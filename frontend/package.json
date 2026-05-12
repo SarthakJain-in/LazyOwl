@@ -11,13 +11,16 @@
   },
   "dependencies": {
     "@hello-pangea/dnd": "^18.0.1",
+    "@tiptap/extension-highlight": "^3.23.2",
+    "@tiptap/extension-underline": "^3.23.2",
+    "@tiptap/pm": "^3.23.2",
+    "@tiptap/react": "^3.23.2",
+    "@tiptap/starter-kit": "^3.23.2",
+    "dompurify": "^3.4.2",
     "lucide-react": "^0.577.0",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
-    "react-markdown": "^10.1.0",
     "react-router-dom": "^7.13.1",
-    "react-syntax-highlighter": "^16.1.1",
-    "remark-gfm": "^4.0.1",
     "zustand": "^5.0.11"
   },
   "devDependencies": {

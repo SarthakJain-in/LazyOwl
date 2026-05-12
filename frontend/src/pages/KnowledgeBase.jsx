@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useAppStore } from "../store/useAppStore";
-import MarkdownViewer from "../components/MarkdownViewer";
+import DOMPurify from "dompurify";
+import RichTextEditor from "../components/RichTextEditor";
 import {
   Search,
   FileText,
@@ -79,14 +80,16 @@ export default function KnowledgeBase() {
     setIsEditing(false);
   };
 
-  const handleCreateNewNote = async () => {
-    // Automatically create new notes as loose files, you can drag them later
+  const handleCreateNewNote = async (folderId = null) => {
     const newNote = await addNote({
       title: "Untitled Note",
-      folderId: null,
+      folderId: folderId,
       content: "",
     });
     if (newNote) {
+      if (folderId) {
+        setExpandedFolders((prev) => ({ ...prev, [folderId]: true }));
+      }
       handleSelectNote(newNote);
       setIsEditing(true);
     }
@@ -236,7 +239,7 @@ export default function KnowledgeBase() {
             <span className="hidden sm:inline">New Folder</span>
           </button>
           <button
-            onClick={handleCreateNewNote}
+            onClick={() => handleCreateNewNote(null)}
             className="flex items-center gap-2 bg-forge-accent text-white px-4 py-2 rounded-lg font-semibold hover:bg-forge-accentHover transition-colors shadow-brand"
           >
             <Plus size={20} />
@@ -309,6 +312,16 @@ export default function KnowledgeBase() {
                         </button>
 
                         <div className="opacity-0 group-hover:opacity-100 flex items-center gap-1 transition-opacity">
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleCreateNewNote(folder._id);
+                            }}
+                            className="p-1.5 text-forge-textSecondary hover:text-forge-accent hover:bg-forge-accent/10 rounded-lg transition-colors"
+                            title="Add Note to Folder"
+                          >
+                            <Plus size={14} />
+                          </button>
                           <button
                             onClick={(e) => openRenameFolderModal(e, folder)}
                             className="p-1.5 text-forge-textSecondary hover:text-forge-accent hover:bg-forge-accent/10 rounded-lg transition-colors"
@@ -504,18 +517,19 @@ export default function KnowledgeBase() {
               )}
               <div className="flex-1 min-h-[300px] flex flex-col">
                 {isEditing ? (
-                  <textarea
-                    value={editForm.content}
-                    onChange={(e) =>
-                      setEditForm({ ...editForm, content: e.target.value })
+                  <RichTextEditor
+                    content={editForm.content}
+                    onChange={(html) =>
+                      setEditForm({ ...editForm, content: html })
                     }
-                    className="w-full h-full flex-1 bg-forge-bg border border-forge-border rounded-xl p-4 text-forge-textPrimary font-mono text-sm focus:outline-none focus:border-forge-accent resize-none transition-colors"
-                    placeholder="Write your notes in Markdown here..."
                   />
                 ) : (
                   <div className="h-full overflow-y-auto pr-2">
-                    {selectedNote.content ? (
-                      <MarkdownViewer content={selectedNote.content} />
+                    {selectedNote.content && selectedNote.content !== '<p></p>' ? (
+                      <div 
+                        className="tiptap"
+                        dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(selectedNote.content) }} 
+                      />
                     ) : (
                       <span className="italic text-forge-textSecondary opacity-50">
                         No content yet. Click edit to start writing.

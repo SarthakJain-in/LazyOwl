@@ -6,9 +6,9 @@
   --bg-color: #EEF2F8; 
   --surface-color: #FFFFFF; 
   --surface-hover-color: #F8F9FB;
-  --border-color: #E9EDF7;
+  --border-color: #E2E8F0;
   --text-primary-color: #1B254B; 
-  --text-secondary-color: #A3AED0;
+  --text-secondary-color: #64748B;
   --accent-color: #4361EE; 
   --accent-hover-color: #344dd9;
   --success-color: #05CD99;
@@ -27,9 +27,9 @@
   --bg-color: #0B0E14;
   --surface-color: #151821;
   --surface-hover-color: #1C202D;
-  --border-color: #2C3140;
+  --border-color: #334155;
   --text-primary-color: #FFFFFF;
-  --text-secondary-color: #8B92A5;
+  --text-secondary-color: #94A3B8;
   --accent-color: #4361EE;
   --accent-hover-color: #5b75f2;
   --success-color: #05CD99;
@@ -127,4 +127,50 @@ body {
 * {
   scrollbar-width: thin;
   scrollbar-color: var(--border-color) var(--bg-color);
+}
+
+/* --- TIPTAP EDITOR STYLES --- */
+.tiptap p {
+  margin-bottom: 1rem;
+}
+.tiptap h1 {
+  font-size: 1.5rem;
+  line-height: 2rem;
+  font-weight: 700;
+  margin-top: 1.5rem;
+  margin-bottom: 1rem;
+}
+.tiptap h2 {
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+  font-weight: 700;
+  margin-top: 1.25rem;
+  margin-bottom: 0.75rem;
+}
+.tiptap ul {
+  list-style-type: disc;
+  padding-left: 1.25rem;
+  margin-bottom: 1rem;
+}
+.tiptap ol {
+  list-style-type: decimal;
+  padding-left: 1.25rem;
+  margin-bottom: 1rem;
+}
+.tiptap li {
+  margin-bottom: 0.25rem;
+}
+.tiptap mark {
+  background-color: #fef08a;
+  color: #111827 !important;
+  border-radius: 0.125rem;
+  padding: 0.125rem 0.25rem;
+}
+.tiptap p.is-editor-empty:first-child::before {
+  color: var(--color-forge-textSecondary);
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
+  opacity: 0.5;
 }
